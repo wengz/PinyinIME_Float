@@ -57,7 +57,7 @@ class AtomDictBase {
    * @param start_id The starting id used for this atom dictionary.
    * @param end_id The end id (included) which can be used for this atom
    * dictionary. User dictionary will always use the last id space, so it can
-   * ignore this paramter. All other atom dictionaries should check this
+   * ignore this parameter. All other atom dictionaries should check this
    * parameter.
    * @return True if succeed.
    */

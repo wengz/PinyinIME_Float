@@ -182,7 +182,7 @@ extern "C" {
   bool im_cancel_input();
 
   /**
-   * Get prediction candiates based on the given fixed Chinese string as the
+   * Get prediction candidates based on the given fixed Chinese string as the
    * history.
    *
    * @param his_buf The history buffer to do the prediction. It should be ended
