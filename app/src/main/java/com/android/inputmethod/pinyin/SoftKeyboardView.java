@@ -16,19 +16,19 @@
 
 package com.android.inputmethod.pinyin;
 
-import com.android.inputmethod.pinyin.SoftKeyboard.KeyRow;
-
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Paint.FontMetricsInt;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.android.inputmethod.pinyin.SoftKeyboard.KeyRow;
+
+import java.util.List;
 
 /**
  * Class used to show a soft keyboard.

@@ -315,27 +315,35 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
         switch (mSkbLayout) {
             case R.xml.skb_qwerty:
                 majorSkb = skbPool.getSoftKeyboard(R.xml.skb_qwerty,
-                        R.xml.skb_qwerty, screenWidth, skbHeight, getContext());
+                        R.xml.skb_qwerty,
+                        mEnvironment.needFloatInputMode() ? Environment.LANDSCAPE_SKB_WIDTH : screenWidth,
+                        skbHeight, getContext());
                 break;
 
             case R.xml.skb_sym1:
                 majorSkb = skbPool.getSoftKeyboard(R.xml.skb_sym1, R.xml.skb_sym1,
-                        screenWidth, skbHeight, getContext());
+                        mEnvironment.needFloatInputMode() ? Environment.LANDSCAPE_SKB_WIDTH : screenWidth,
+                        skbHeight, getContext());
                 break;
 
             case R.xml.skb_sym2:
                 majorSkb = skbPool.getSoftKeyboard(R.xml.skb_sym2, R.xml.skb_sym2,
-                        screenWidth, skbHeight, getContext());
+                        mEnvironment.needFloatInputMode() ? Environment.LANDSCAPE_SKB_WIDTH : screenWidth,
+                        skbHeight, getContext());
                 break;
 
             case R.xml.skb_smiley:
                 majorSkb = skbPool.getSoftKeyboard(R.xml.skb_smiley,
-                        R.xml.skb_smiley, screenWidth, skbHeight, getContext());
+                        R.xml.skb_smiley,
+                        mEnvironment.needFloatInputMode() ? Environment.LANDSCAPE_SKB_WIDTH : screenWidth,
+                        skbHeight, getContext());
                 break;
 
             case R.xml.skb_phone:
                 majorSkb = skbPool.getSoftKeyboard(R.xml.skb_phone,
-                        R.xml.skb_phone, screenWidth, skbHeight, getContext());
+                        R.xml.skb_phone,
+                        mEnvironment.needFloatInputMode() ? Environment.LANDSCAPE_SKB_WIDTH : screenWidth,
+                        skbHeight, getContext());
                 break;
             default:
         }

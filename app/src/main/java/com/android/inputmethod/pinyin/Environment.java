@@ -18,6 +18,7 @@ package com.android.inputmethod.pinyin;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -114,24 +115,36 @@ public class Environment {
         return mInstance;
     }
 
+    public static final int LANDSCAPE_KEY_HEIGHT = 80;
+    public static final int LANDSCAPE_SKB_WIDTH = 1000;
+    public static final int LANDSCAPE_CANDIDATE_AREA_HEIGHT = 60;
+
     public void onConfigurationChanged(Configuration newConfig, Context context) {
         if (mConfig.orientation != newConfig.orientation) {
-            WindowManager wm = (WindowManager) context
-                    .getSystemService(Context.WINDOW_SERVICE);
+            mConfig.updateFrom(newConfig);
+
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             Display d = wm.getDefaultDisplay();
             mScreenWidth = d.getWidth();
             mScreenHeight = d.getHeight();
 
             int scale;
-            if (mScreenHeight > mScreenWidth) {
-                mKeyHeight = (int) (mScreenHeight * KEY_HEIGHT_RATIO_PORTRAIT);
-                mCandidatesAreaHeight = (int) (mScreenHeight * CANDIDATES_AREA_HEIGHT_RATIO_PORTRAIT);
-                scale = mScreenWidth;
+            if (needFloatInputMode()) {
+                mKeyHeight = LANDSCAPE_KEY_HEIGHT;
+                mCandidatesAreaHeight = LANDSCAPE_CANDIDATE_AREA_HEIGHT;
+                scale = LANDSCAPE_KEY_HEIGHT * 5;
             } else {
-                mKeyHeight = (int) (mScreenHeight * KEY_HEIGHT_RATIO_LANDSCAPE);
-                mCandidatesAreaHeight = (int) (mScreenHeight * CANDIDATES_AREA_HEIGHT_RATIO_LANDSCAPE);
-                scale = mScreenHeight;
+                if (mScreenHeight > mScreenWidth) {
+                    mKeyHeight = (int) (mScreenHeight * KEY_HEIGHT_RATIO_PORTRAIT);
+                    mCandidatesAreaHeight = (int) (mScreenHeight * CANDIDATES_AREA_HEIGHT_RATIO_PORTRAIT);
+                    scale = mScreenWidth;
+                } else {
+                    mKeyHeight = (int) (mScreenHeight * KEY_HEIGHT_RATIO_LANDSCAPE);
+                    mCandidatesAreaHeight = (int) (mScreenHeight * CANDIDATES_AREA_HEIGHT_RATIO_LANDSCAPE);
+                    scale = mScreenHeight;
+                }
             }
+
             mNormalKeyTextSize = (int) (scale * NORMAL_KEY_TEXT_SIZE_RATIO);
             mFunctionKeyTextSize = (int) (scale * FUNCTION_KEY_TEXT_SIZE_RATIO);
             mNormalBalloonTextSize = (int) (scale * NORMAL_BALLOON_TEXT_SIZE_RATIO);
@@ -139,7 +152,6 @@ public class Environment {
             mKeyBalloonWidthPlus = (int) (scale * KEY_BALLOON_WIDTH_PLUS_RATIO);
             mKeyBalloonHeightPlus = (int) (scale * KEY_BALLOON_HEIGHT_PLUS_RATIO);
         }
-
         mConfig.updateFrom(newConfig);
     }
 
@@ -218,4 +230,21 @@ public class Environment {
     public boolean needDebug() {
         return mDebug;
     }
+
+    public int getScreenOrientation() {
+        return mConfig.orientation;
+    }
+
+    public boolean needFloatInputMode() {
+        Log.d("zzz", "needFloatInputMode: getScreenOrientation()="+getScreenOrientation()+"  mScreenHeight="+mScreenHeight+"  mScreenWidth="+mScreenWidth);
+
+        if ((getScreenOrientation() == Configuration.ORIENTATION_LANDSCAPE)
+                ||
+                (getScreenOrientation() == Configuration.ORIENTATION_UNDEFINED && mScreenHeight < mScreenWidth)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
 }

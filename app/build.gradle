@@ -19,10 +19,39 @@ android {
             noCompress "dat"
         }
     }
+
+    signingConfigs {
+        aoc {
+            keyAlias 'fighter'
+            keyPassword '12345678'
+            storeFile file('./aoc.jks')
+            storePassword '12345678'
+        }
+
+        php {
+            keyAlias 'phpfighter'
+            keyPassword 'tpv123456'
+            storeFile file('./php.jks')
+            storePassword 'tpv123456'
+        }
+
+        lango {
+            keyAlias 'amlogic'
+            keyPassword 'tpv123456'
+            storeFile file('./a311d2.jks')
+            storePassword 'tpv123456'
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.lango
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.lango
         }
     }
     externalNativeBuild {

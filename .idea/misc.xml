@@ -6,6 +6,8 @@
         <entry key="..\:/AndroidStudioProjects/PinyinIME_gradle/PinyinIME/app/src/main/res/drawable/arrow_bg.xml" value="0.25625" />
         <entry key="..\:/AndroidStudioProjects/PinyinIME_gradle/PinyinIME/app/src/main/res/layout/activity_main.xml" value="0.24010416666666667" />
         <entry key="..\:/AndroidStudioProjects/PinyinIME_gradle/PinyinIME/app/src/main/res/layout/candidates_container.xml" value="0.24010416666666667" />
+        <entry key="..\:/AndroidStudioProjects/PinyinIME_gradle/PinyinIME/app/src/main/res/layout/float_input_container.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/PinyinIME_gradle/PinyinIME/app/src/main/res/layout/input_space_holder.xml" value="0.15885416666666666" />
         <entry key="..\:/AndroidStudioProjects/PinyinIME_gradle/PinyinIME/app/src/main/res/layout/skb_container.xml" value="0.24010416666666667" />
       </map>
     </option>

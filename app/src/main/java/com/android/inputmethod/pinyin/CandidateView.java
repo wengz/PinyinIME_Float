@@ -16,23 +16,23 @@
 
 package com.android.inputmethod.pinyin;
 
-import com.android.inputmethod.pinyin.PinyinIME.DecodingInfo;
-
-import java.util.Vector;
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.graphics.Paint.FontMetricsInt;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.android.inputmethod.pinyin.PinyinIME.DecodingInfo;
+
+import java.util.Vector;
 
 /**
  * View to show candidate list. There two candidate view instances which are
@@ -695,7 +695,12 @@ public class CandidateView extends View {
                         .get(mDecInfo.mPageStart.get(mPageNo) + candPos), 44, true,
                 mImeCandidateColor, desired_width, desired_height);
 
-        getLocationOnScreen(mLocationTmp);
+        if (Environment.getInstance().needFloatInputMode()) {
+            getLocationInWindow(mLocationTmp);
+        } else {
+            getLocationOnScreen(mLocationTmp);
+        }
+
         mHintPositionToInputView[0] = mLocationTmp[0]
                 + (int) (r.left - (mBalloonHint.getWidth() - desired_width) / 2);
         mHintPositionToInputView[1] = -mBalloonHint.getHeight();

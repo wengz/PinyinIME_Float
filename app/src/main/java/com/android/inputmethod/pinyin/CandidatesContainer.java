@@ -16,8 +16,6 @@
 
 package com.android.inputmethod.pinyin;
 
-import com.android.inputmethod.pinyin.PinyinIME.DecodingInfo;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -26,12 +24,14 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
-import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.ViewFlipper;
+
+import com.android.inputmethod.pinyin.PinyinIME.DecodingInfo;
 
 interface ArrowUpdater {
     void updateArrowStatus();
@@ -229,7 +229,7 @@ public class CandidatesContainer extends RelativeLayout implements
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         Environment env = Environment.getInstance();
-        int measuredWidth = env.getScreenWidth();
+        int measuredWidth = env.needFloatInputMode() ? Environment.LANDSCAPE_SKB_WIDTH : env.getScreenWidth();
         int measuredHeight = getPaddingTop();
         measuredHeight += env.getHeightForCandidates();
         widthMeasureSpec = MeasureSpec.makeMeasureSpec(measuredWidth,
