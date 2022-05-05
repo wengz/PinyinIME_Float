@@ -118,6 +118,8 @@ public class Environment {
     public static final int LANDSCAPE_KEY_HEIGHT = 80;
     public static final int LANDSCAPE_SKB_WIDTH = 1000;
     public static final int LANDSCAPE_CANDIDATE_AREA_HEIGHT = 60;
+    public static final int LANDSCAPE_SKB_PREDICT_HEIGHT = 462;
+    public static final int LANDSCAPE_SKB_VIEW_MARGIN = 30;
 
     public void onConfigurationChanged(Configuration newConfig, Context context) {
         if (mConfig.orientation != newConfig.orientation) {

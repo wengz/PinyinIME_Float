@@ -25,9 +25,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.inputmethodservice.InputMethodService;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -61,6 +63,8 @@ public class PinyinIME extends InputMethodService {
      * TAG for debug.
      */
     static final String TAG = "PinyinIME";
+
+    public static final String BUNDLE_KEY_SERVED_VIEW_BOUND = "com.tpv.xm.iwb.ime.BUNDLE_KEY_SERVED_VIEW_BOUND";
 
     /**
      * If is is true, IME will simulate key events for delete key, and send the
@@ -1179,13 +1183,38 @@ public class PinyinIME extends InputMethodService {
         resetToIdleState(false);
     }
 
+    Handler mHandler;
+
+    private void examineBoardSize() {
+        int width = mLandscapeFloatInputContainer.getWidth();
+        int height = mLandscapeFloatInputContainer.getHeight();
+        Log.d(TAG, "examineBoardSize: width="+width+" height="+height);
+    }
+
     @Override
     public void onStartInputView(EditorInfo editorInfo, boolean restarting) {
+        if (mHandler == null) {
+            mHandler = new Handler(Looper.getMainLooper());
+        }
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                examineBoardSize();
+            }
+        }, 3000);
+
         if (mEnvironment.needDebug()) {
             Log.d(TAG, "onStartInputView " + " contentType: "
                     + String.valueOf(editorInfo.inputType) + " Restarting:"
                     + String.valueOf(restarting));
         }
+
+        if (editorInfo.extras != null) {
+            mServedViewBound = editorInfo.extras.getParcelable(BUNDLE_KEY_SERVED_VIEW_BOUND);
+            //mServedViewBound = new Rect(mServedViewBound.left/2, mServedViewBound.top/2, mServedViewBound.right/2, mServedViewBound.bottom/2);
+            Log.d(TAG, "onStartInputView: mServedViewBound="+mServedViewBound);
+        }
+
         updateIcon(mInputModeSwitcher.requestInputWithSkb(editorInfo));
         resetToIdleState(false);
         mSkbContainer.updateInputMode();
@@ -1199,6 +1228,7 @@ public class PinyinIME extends InputMethodService {
 
     public WindowManager mWindowManager;
     private WindowManager.LayoutParams mFloatInputLayoutParam;
+    private Rect mServedViewBound;
 
     private void setFloatInputLayoutParam() {
         mFloatInputLayoutParam = new WindowManager.LayoutParams();
@@ -1218,17 +1248,31 @@ public class PinyinIME extends InputMethodService {
     private int mLastFloatInputOffsetY = -1;
 
     private int getFloatInputX() {
-        if (mLastFloatInputOffsetX != -1) {
-            return mLastFloatInputOffsetX;
-        }
-        return (mEnvironment.getScreenWidth() - Environment.LANDSCAPE_SKB_WIDTH)/2;
+        int hOffset = (mServedViewBound.width() - Environment.LANDSCAPE_SKB_WIDTH)/2;
+        return mServedViewBound.left + hOffset;
+
+
+//        if (mLastFloatInputOffsetX != -1) {
+//            return mLastFloatInputOffsetX;
+//        }
+//        return (mEnvironment.getScreenWidth() - Environment.LANDSCAPE_SKB_WIDTH)/2;
     }
 
     private int getFloatInputY() {
-        if (mLastFloatInputOffsetY != -1) {
-            return mLastFloatInputOffsetY;
+        int screenHeight = mEnvironment.getScreenHeight();
+        int remainSpace = screenHeight - mServedViewBound.bottom;
+        if ((remainSpace < Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
+                && (mServedViewBound.top > Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
+        ) {
+            return mServedViewBound.top - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT - Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+        } else {
+            return mServedViewBound.bottom + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
         }
-        return DEFAULT_FLOAT_INPUT_OFFSET;
+
+//        if (mLastFloatInputOffsetY != -1) {
+//            return mLastFloatInputOffsetY;
+//        }
+//        return DEFAULT_FLOAT_INPUT_OFFSET;
     }
 
     @Override
