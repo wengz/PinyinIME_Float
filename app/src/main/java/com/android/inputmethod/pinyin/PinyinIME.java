@@ -1248,31 +1248,34 @@ public class PinyinIME extends InputMethodService {
     private int mLastFloatInputOffsetY = -1;
 
     private int getFloatInputX() {
-        int hOffset = (mServedViewBound.width() - Environment.LANDSCAPE_SKB_WIDTH)/2;
-        return mServedViewBound.left + hOffset;
-
-
-//        if (mLastFloatInputOffsetX != -1) {
-//            return mLastFloatInputOffsetX;
-//        }
-//        return (mEnvironment.getScreenWidth() - Environment.LANDSCAPE_SKB_WIDTH)/2;
+        if (mServedViewBound != null) {
+            int hOffset = (mServedViewBound.width() - Environment.LANDSCAPE_SKB_WIDTH)/2;
+            return mServedViewBound.left + hOffset;
+        } else {
+            if (mLastFloatInputOffsetX != -1) {
+                return mLastFloatInputOffsetX;
+            }
+            return (mEnvironment.getScreenWidth() - Environment.LANDSCAPE_SKB_WIDTH)/2;
+        }
     }
 
     private int getFloatInputY() {
-        int screenHeight = mEnvironment.getScreenHeight();
-        int remainSpace = screenHeight - mServedViewBound.bottom;
-        if ((remainSpace < Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
-                && (mServedViewBound.top > Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
-        ) {
-            return mServedViewBound.top - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT - Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+        if (mServedViewBound != null) {
+            int screenHeight = mEnvironment.getScreenHeight();
+            int remainSpace = screenHeight - mServedViewBound.bottom;
+            if ((remainSpace < Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
+                    && (mServedViewBound.top > Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
+            ) {
+                return mServedViewBound.top - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT - Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+            } else {
+                return mServedViewBound.bottom + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+            }
         } else {
-            return mServedViewBound.bottom + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+            if (mLastFloatInputOffsetY != -1) {
+                return mLastFloatInputOffsetY;
+            }
+            return DEFAULT_FLOAT_INPUT_OFFSET;
         }
-
-//        if (mLastFloatInputOffsetY != -1) {
-//            return mLastFloatInputOffsetY;
-//        }
-//        return DEFAULT_FLOAT_INPUT_OFFSET;
     }
 
     @Override
