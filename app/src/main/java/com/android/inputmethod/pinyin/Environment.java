@@ -240,13 +240,14 @@ public class Environment {
     public boolean needFloatInputMode() {
         Log.d("zzz", "needFloatInputMode: getScreenOrientation()="+getScreenOrientation()+"  mScreenHeight="+mScreenHeight+"  mScreenWidth="+mScreenWidth);
 
-        if ((getScreenOrientation() == Configuration.ORIENTATION_LANDSCAPE)
-                ||
-                (getScreenOrientation() == Configuration.ORIENTATION_UNDEFINED && mScreenHeight < mScreenWidth)
-        ) {
-            return true;
-        }
-        return false;
+//        if ((getScreenOrientation() == Configuration.ORIENTATION_LANDSCAPE)
+//                ||
+//                (getScreenOrientation() == Configuration.ORIENTATION_UNDEFINED && mScreenHeight < mScreenWidth)
+//        ) {
+//            return true;
+//        }
+//        return false;
+        return true;
     }
 
 }
