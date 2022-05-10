@@ -84,7 +84,7 @@ public class ComposingView extends View {
     /**
      * Drawable used to draw highlight effect.
      */
-    private Drawable mHlDrawable;
+    //private Drawable mHlDrawable;
 
     /**
      * Drawable used to draw cursor for editing mode.
@@ -110,7 +110,7 @@ public class ComposingView extends View {
         super(context, attrs);
 
         Resources r = context.getResources();
-        mHlDrawable = r.getDrawable(R.drawable.composing_hl_bg);
+        //mHlDrawable = r.getDrawable(R.drawable.composing_hl_bg);
         mCursor = r.getDrawable(R.drawable.composing_area_cursor);
 
         mStrColor = r.getColor(R.color.composing_color);
@@ -223,9 +223,9 @@ public class ComposingView extends View {
         y = -mFmi.top + getPaddingTop();
 
         mPaint.setColor(mStrColorHl);
-        mHlDrawable.setBounds(getPaddingLeft(), getPaddingTop(), getWidth()
-                - getPaddingRight(), getHeight() - getPaddingBottom());
-        mHlDrawable.draw(canvas);
+//        mHlDrawable.setBounds(getPaddingLeft(), getPaddingTop(), getWidth()
+//                - getPaddingRight(), getHeight() - getPaddingBottom());
+//        mHlDrawable.draw(canvas);
 
         String splStr = mDecInfo.getOrigianlSplStr().toString();
         canvas.drawText(splStr, 0, splStr.length(), x, y, mPaint);

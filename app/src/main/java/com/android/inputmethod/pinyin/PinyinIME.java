@@ -940,7 +940,7 @@ public class PinyinIME extends InputMethodService {
         LayoutInflater inflater = getLayoutInflater();
         // Inflate the floating container view
         mFloatingContainer = (LinearLayout) inflater.inflate(
-                R.layout.floating_container, null);
+                R.layout.composing_container, null);
 
         // The first child is the composing view.
         mComposingView = (ComposingView) mFloatingContainer.getChildAt(0);

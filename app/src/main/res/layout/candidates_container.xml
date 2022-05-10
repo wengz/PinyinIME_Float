@@ -27,9 +27,8 @@
 
         <!-- 候选词区域 -->
         <RelativeLayout
-            android:layout_width="0px"
-            android:layout_height="match_parent"
-            android:layout_weight="8">
+            android:layout_width="591px"
+            android:layout_height="match_parent">
 
             <ImageButton
                 android:id="@+id/arrow_left_btn"
@@ -83,9 +82,8 @@
 
         <!-- 右侧按钮 -->
         <LinearLayout
-            android:layout_width="0px"
-            android:layout_height="match_parent"
-            android:layout_weight="2">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/btn_drag"
