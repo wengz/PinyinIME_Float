@@ -171,6 +171,9 @@ public class PinyinIME extends InputMethodService {
      */
     private EnglishInputProcessor mImEn;
 
+    private View mBtnDrag;
+    private View mBtnHide;
+
     // receive ringer mode changes
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -966,12 +969,47 @@ public class PinyinIME extends InputMethodService {
 
         if (mEnvironment.needFloatInputMode()) {
             mLandscapeFloatCandidateContainer.addView(mCandidatesContainer);
+            initCandidateButtons();
             setCandidatesViewShown(false);
             return null;
         } else {
             setCandidatesViewShown(true);
             return mCandidatesContainer;
         }
+    }
+
+    private void initCandidateButtons() {
+            mBtnDrag = mLandscapeFloatInputContainer.findViewById(R.id.btn_drag);
+            mBtnHide = mLandscapeFloatInputContainer.findViewById(R.id.btn_hide);
+            mBtnDrag.setOnTouchListener(new View.OnTouchListener() {
+
+                float lastTouchX;
+                float lastTouchY;
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getActionMasked()){
+                        case MotionEvent.ACTION_DOWN:
+                            lastTouchX = event.getRawX();
+                            lastTouchY = event.getRawY();
+                            break;
+
+                        case MotionEvent.ACTION_MOVE:
+                            float curTouchX = event.getRawX();
+                            float curTouchY = event.getRawY();
+                            float deltaX = curTouchX - lastTouchX;
+                            float deltaY = curTouchY - lastTouchY;
+                            updatePositionRelative((int)deltaX, (int)deltaY);
+                            lastTouchX = curTouchX;
+                            lastTouchY = curTouchY;
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                            break;
+                    }
+                    return true;
+                }
+            });
     }
 
     public void responseSoftKeyEvent(SoftKey sKey) {
@@ -1106,7 +1144,6 @@ public class PinyinIME extends InputMethodService {
 
     private View mLandscapeFloatInputContainer;
     private ViewGroup mLandscapeFloatCandidateContainer;
-    private View mLandscapeFloatDrager;
 
     @Override
     public View onCreateInputView() {
@@ -1122,37 +1159,6 @@ public class PinyinIME extends InputMethodService {
             mSkbContainer.setService(this);
             mSkbContainer.setInputModeSwitcher(mInputModeSwitcher);
             mSkbContainer.setGestureDetector(mGestureDetectorSkb);
-
-            mLandscapeFloatDrager = mLandscapeFloatInputContainer.findViewById(R.id.drager);
-            mLandscapeFloatDrager.setOnTouchListener(new View.OnTouchListener() {
-
-                float lastTouchX;
-                float lastTouchY;
-
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    switch (event.getActionMasked()){
-                        case MotionEvent.ACTION_DOWN:
-                            lastTouchX = event.getRawX();
-                            lastTouchY = event.getRawY();
-                            break;
-
-                        case MotionEvent.ACTION_MOVE:
-                            float curTouchX = event.getRawX();
-                            float curTouchY = event.getRawY();
-                            float deltaX = curTouchX - lastTouchX;
-                            float deltaY = curTouchY - lastTouchY;
-                            updatePositionRelative((int)deltaX, (int)deltaY);
-                            lastTouchX = curTouchX;
-                            lastTouchY = curTouchY;
-                            break;
-
-                        case MotionEvent.ACTION_UP:
-                            break;
-                    }
-                    return true;
-                }
-            });
 
             View fakeInputView = inflater.inflate(R.layout.input_space_holder, null);
             return fakeInputView;

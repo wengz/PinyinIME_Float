@@ -5,13 +5,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/drager"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/drag"
-        android:layout_width="80px"
-        android:layout_height="80px"/>
-
     <FrameLayout
         android:id="@+id/candidate_container"
         android:layout_width="match_parent"
@@ -20,9 +13,8 @@
     <com.android.inputmethod.pinyin.SkbContainer
         android:id="@+id/skb_container"
         android:orientation="vertical"
-        android:background="@drawable/skb_container_bg"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <ViewFlipper
             android:id="@+id/alpha_floatable"

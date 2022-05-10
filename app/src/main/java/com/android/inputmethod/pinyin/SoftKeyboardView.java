@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetricsInt;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Vibrator;
@@ -401,7 +402,12 @@ public class SoftKeyboardView extends View {
     protected void onDraw(Canvas canvas) {
         if (null == mSoftKeyboard) return;
 
+        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
         canvas.translate(getPaddingLeft(), getPaddingTop());
+
+        Drawable bgDrawable = getContext().getDrawable(R.drawable.skb_core_bg);
+        bgDrawable.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
+        bgDrawable.draw(canvas);
 
         Environment env = Environment.getInstance();
         mNormalKeyTextSize = env.getKeyTextSize(false);

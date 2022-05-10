@@ -521,6 +521,9 @@ public class XmlKeyboardLoader {
                             return null;
                         }
 
+                        mKeyXPos = getFloat(xrp, XMLATTR_START_POS_X, mKeyXPos);
+                        mKeyYPos = getFloat(xrp, XMLATTR_START_POS_Y, mKeyYPos);
+
                         String splitter = xrp.getAttributeValue(null,
                                 XMLATTR_KEY_SPLITTER);
                         splitter = Pattern.quote(splitter);
@@ -576,6 +579,8 @@ public class XmlKeyboardLoader {
                         if (!attrKey.getAttributes(attrRow)) {
                             return null;
                         }
+
+                        mKeyXPos = getFloat(xrp, XMLATTR_START_POS_X, mKeyXPos);
 
                         int keyId = this.getInteger(xrp, XMLATTR_ID, -1);
                         if (keyId >= 0) {

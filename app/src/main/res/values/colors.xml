@@ -13,4 +13,13 @@
     <color name="composing_color">#ff000000</color>
     <color name="composing_color_hl">#ffffffff</color>
     <color name="composing_color_idle">#ff777777</color>
+
+    <color name="color_E2EDFC">#E2EDFC</color>
+    <color name="color_CBD5E2">#CBD5E2</color>
+    <color name="color_FFFFFF">#FFFFFF</color>
+    <color name="color_E5E5E5">#E5E5E5</color>
+    <color name="color_5090FF">#5090FF</color>
+    <color name="color_4881E5">#4881E5</color>
+    <color name="color_2E3238">#2E3238</color>
+
 </resources>

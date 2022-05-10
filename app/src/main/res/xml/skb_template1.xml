@@ -19,33 +19,32 @@
   key_ymargin="0%p"
   balloon_bg="@drawable/key_balloon_bg"
   popup_bg="@drawable/miniskb_bg"
-  color="@color/label_color"
-  color_highlight="@color/label_color"
+  color="@color/color_2E3238"
+  color_highlight="@color/color_2E3238"
   color_balloon="@color/balloon_color">
   <!-- Normal key -->
   <key_type
     id="0"
-    bg="@drawable/normal_key_bg"
-    hlbg="@drawable/normal_key_hl_bg"
-    color_highlight="@color/label_color_hl0"/>
+    bg="@drawable/key_normal_bg_2"
+    hlbg="@drawable/key_press_bg_2" />
 
   <!-- Function key -->
   <key_type
     id="1"
-    bg="@drawable/normal_key_bg"
-    hlbg="@drawable/normal_key_hl_bg"/>
+      bg="@drawable/key_normal_bg_3"
+      hlbg="@drawable/key_press_bg_3"/>
 
   <!-- Light key, light is off -->
   <key_type
     id="2"
-    bg="@drawable/light_key_bg"
-    hlbg="@drawable/light_key_hl_bg"/>
+    bg="@drawable/key_normal_bg_3"
+    hlbg="@drawable/key_press_bg_3"/>
 
   <!-- Light key, light is on -->
   <key_type
     id="3"
-    bg="@drawable/light_key_up_bg"
-    hlbg="@drawable/light_key_up_hl_bg"/>
+    bg="@drawable/key_normal_bg_3"
+    hlbg="@drawable/key_press_bg_3"/>
 
   <!-- key without background-->
   <key_type
@@ -54,9 +53,13 @@
   <!-- Key with normal background but on-key high-light-->
   <key_type
     id="5"
-    bg="@drawable/normal_key_bg"
-    hlbg="@drawable/normal_key_hl_bg"
-    color_highlight="@color/label_color_hl0"/>
+    bg="@drawable/key_normal_bg_2"
+    hlbg="@drawable/key_press_bg_2"/>
+
+  <key_type
+      id="6"
+      bg="@drawable/key_normal_bg"
+      hlbg="@drawable/key_press_bg"/>
 
   <!-- Default icons for enter key -->
   <key_icon code="66" icon="@drawable/enter_icon"
@@ -68,7 +71,7 @@
 
   <!-- Default icons for delete key -->
   <key_icon code="67" icon="@drawable/delete_icon"
-    icon_popup="@drawable/delete_popup_icon"/>
+    icon_popup="@drawable/delete_icon"/>
 
   <!-- Default key definition -->
   <!-- Enter key for QWERTY-like keyboards.-->

@@ -18,26 +18,24 @@
   skb_cache_flag="true"
   qwerty="true"
   qwerty_uppercase="true"
-  key_xmargin="0.607%p"
-  key_ymargin="1.960%p"
-  width="9.311%p"
-  height="23.529%p"
+  width="10%p"
+  height="25%p"
   key_type="0"
   repeat="false"
   balloon="true">
 
-  <row start_pos_x="3.441%p" start_pos_y="2.941%p" >
+  <row>
     <keys splitter="|" labels="Q|W|E|R|T|Y|U|I|O|P"
       codes="45|51|33|46|48|53|49|37|43|44"/>
   </row>
 
-  <row start_pos_x="8.164%p" start_pos_y="26.470%p">
+  <row start_pos_x="4.078%p" width="10.205%p">
     <keys splitter="|" labels="A|S|D|F|G|H|J|K|L"
       codes="29|47|32|34|35|36|38|39|40"/>
   </row>
 
-  <row start_pos_x="3.441%p" start_pos_y="50%p">
-    <key label="，" width="12.550%p" icon="@drawable/comma_full_icon"
+  <row width="10.205%p">
+    <key label="，" width="14.286%p" icon="@drawable/comma_full_icon"
       icon_popup="@drawable/comma_full_popup_icon">
       <toggle_state state_id="@string/toggle_smiley" code="-6"
         icon="@drawable/smiley_icon" icon_popup="@drawable/smiley_popup_icon"
@@ -51,9 +49,9 @@
       <toggle_state state_id="@string/toggle_cn_cand" label="'"
         key_type="1"/>
     </key>
-    <keys start_pos_x="17.476%p" splitter="|" labels="Z|X|C|V|B|N|M"
+    <keys splitter="|" labels="Z|X|C|V|B|N|M"
       codes="54|52|31|50|30|42|41"/>
-    <key start_pos_x="84.008%p" width="12.550%p" code="67" key_type="6" repeat="true"/>
+    <key id="3"/>
   </row>
 
   <row width="20%p" row_id="@string/toggle_row_cn">
@@ -82,24 +80,13 @@
     <key id="1"/>
   </row>
 
-  <row row_id="@string/toggle_row_emailaddress" start_pos_x="3.441%p" start_pos_y="73.529%p">
-    <key width="12.550%p" code="-2" label="中 文" key_type="6"
-        repeat="true">
-      <toggle_state state_id="@string/toggle_en_lower" label="英 文" code="-2"/>
-      <toggle_state state_id="@string/toggle_en_upper" label="英 文" code="-2"/>
-    </key>
-    <key code="-3" width="12.550%p" key_type="6" label="\?123"/>
-    <key label="\@"/>
-    <key code="62" key_type="5" width="31.983%p" label="Space" balloon="false"/>
-    <key label="." key_type="0" icon_popup="@drawable/period_popup_icon"/>
-    <key width="17.408%p"  code="66" key_type="6">
-      <toggle_state state_id="@string/toggle_enter_go" label="去往" code="66"/>
-      <toggle_state state_id="@string/toggle_enter_search" code="66"
-          icon="@drawable/search_icon" icon_popup="@drawable/search_popup_icon"/>
-      <toggle_state state_id="@string/toggle_enter_send" label="发送" code="66"/>
-      <toggle_state state_id="@string/toggle_enter_next" label="下一个" code="66"/>
-      <toggle_state state_id="@string/toggle_enter_done" label="完成" code="66"/>
-    </key>
+  <row width="20%p" row_id="@string/toggle_row_emailaddress" start_pos_y="75%p">
+    <key id="6"/>
+    <key id="4"/>
+    <key label="\@" width="15.304%p"/>
+    <key code="62" key_type="5" width="15.304%p"/>
+    <key id="7"/>
+    <key id="1"/>
   </row>
 </keyboard>
 

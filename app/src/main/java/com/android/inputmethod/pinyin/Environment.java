@@ -116,8 +116,9 @@ public class Environment {
     }
 
     public static final int LANDSCAPE_KEY_HEIGHT = 80;
-    public static final int LANDSCAPE_SKB_WIDTH = 1000;
-    public static final int LANDSCAPE_CANDIDATE_AREA_HEIGHT = 60;
+    public static final int LANDSCAPE_SKB_WIDTH = 741;
+    public static final int LANDSCAPE_SKB_HEIGHT = 306;
+    public static final int LANDSCAPE_CANDIDATE_AREA_HEIGHT = 54;
     public static final int LANDSCAPE_SKB_PREDICT_HEIGHT = 462;
     public static final int LANDSCAPE_SKB_VIEW_MARGIN = 30;
 
@@ -197,12 +198,14 @@ public class Environment {
     }
 
     public int getSkbHeight() {
-        if (Configuration.ORIENTATION_PORTRAIT == mConfig.orientation) {
-            return mKeyHeight * 4;
-        } else if (Configuration.ORIENTATION_LANDSCAPE == mConfig.orientation) {
-            return mKeyHeight * 4;
-        }
-        return 0;
+//        if (Configuration.ORIENTATION_PORTRAIT == mConfig.orientation) {
+//            return mKeyHeight * 4;
+//        } else if (Configuration.ORIENTATION_LANDSCAPE == mConfig.orientation) {
+//            return mKeyHeight * 4;
+//        }
+//        return 0;
+
+        return LANDSCAPE_SKB_HEIGHT;
     }
 
     public int getKeyTextSize(boolean isFunctionKey) {
