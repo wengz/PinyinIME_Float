@@ -81,7 +81,7 @@ public class BalloonHint extends PopupWindow {
 
     private int mParentLocationInWindow[] = new int[2];
 
-    public BalloonHint(Context context, View parent, int measureSpecMode) {
+    public BalloonHint(Context context, View parent, int measureSpecMode, int balloonViewPadding) {
         super(context);
         mParent = parent;
         mMeasureSpecMode = measureSpecMode;
@@ -91,6 +91,9 @@ public class BalloonHint extends PopupWindow {
         setBackgroundDrawable(new ColorDrawable(0));
 
         mBalloonView = new BalloonView(context);
+        if (balloonViewPadding != 0) {
+            mBalloonView.setPadding(balloonViewPadding, balloonViewPadding, balloonViewPadding, balloonViewPadding);
+        }
         mBalloonView.setClickable(false);
         setContentView(mBalloonView);
 

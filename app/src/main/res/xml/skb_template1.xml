@@ -17,7 +17,7 @@
   skb_bg="@drawable/skb_bg"
   key_xmargin="0%p"
   key_ymargin="0%p"
-  balloon_bg="@drawable/key_balloon_bg"
+  balloon_bg="@drawable/skb_balloon_hint_bg"
   popup_bg="@drawable/miniskb_bg"
   color="@color/color_2E3238"
   color_highlight="@color/color_2E3238"
@@ -25,14 +25,14 @@
   <!-- Normal key -->
   <key_type
     id="0"
-    bg="@drawable/key_normal_bg_2"
-    hlbg="@drawable/key_press_bg_2" />
+    bg="@drawable/key_normal_bg"
+    hlbg="@drawable/key_press_bg" />
 
   <!-- Function key -->
   <key_type
     id="1"
-      bg="@drawable/key_normal_bg_3"
-      hlbg="@drawable/key_press_bg_3"/>
+      bg="@drawable/key_normal_bg_2"
+      hlbg="@drawable/key_press_bg_2"/>
 
   <!-- Light key, light is off -->
   <key_type
@@ -40,26 +40,6 @@
     bg="@drawable/key_normal_bg_3"
     hlbg="@drawable/key_press_bg_3"/>
 
-  <!-- Light key, light is on -->
-  <key_type
-    id="3"
-    bg="@drawable/key_normal_bg_3"
-    hlbg="@drawable/key_press_bg_3"/>
-
-  <!-- key without background-->
-  <key_type
-    id="4"/>
-
-  <!-- Key with normal background but on-key high-light-->
-  <key_type
-    id="5"
-    bg="@drawable/key_normal_bg_2"
-    hlbg="@drawable/key_press_bg_2"/>
-
-  <key_type
-      id="6"
-      bg="@drawable/key_normal_bg"
-      hlbg="@drawable/key_press_bg"/>
 
   <!-- Default icons for enter key -->
   <key_icon code="66" icon="@drawable/enter_icon"
@@ -103,11 +83,11 @@
 
   <!-- Symbol-switching key (off-mode).-->
   <key id="4" code="-3" start_pos_x="20%p" start_pos_y="75%p"
-      width="14.696%p" height="25%p" key_type="2" label="\?123"/>
+      width="14.696%p" height="25%p" key_type="1" label="\?123"/>
 
   <!-- Symbol-switching key (on-mode).-->
   <key id="5" code="-3" start_pos_x="20%p" start_pos_y="75%p"
-      width="14.696%p" height="25%p" key_type="3" label="\?123"/>
+      width="14.696%p" height="25%p" key_type="1" label="\?123"/>
 
   <!-- Language-switching key. -->
   <key id="6" start_pos_x="0%p" start_pos_y="75%p"

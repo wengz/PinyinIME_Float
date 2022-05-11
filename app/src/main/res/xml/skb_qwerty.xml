@@ -37,62 +37,106 @@
   </row>
 
   <row start_pos_x="3.441%p" start_pos_y="50%p">
-    <key label="，" width="12.550%p" icon="@drawable/comma_full_icon"
-      icon_popup="@drawable/comma_full_popup_icon">
-      <toggle_state state_id="@string/toggle_smiley" code="-6"
-        icon="@drawable/smiley_icon" icon_popup="@drawable/smiley_popup_icon"
-        key_type="2"/>
-      <toggle_state state_id="@string/toggle_en_lower" code="-1"
-        icon="@drawable/shift_off_icon"
-        icon_popup="@drawable/shift_off_popup_icon" key_type="2"/>
-      <toggle_state state_id="@string/toggle_en_upper" code="-1"
-        icon="@drawable/shift_on_icon"
-        icon_popup="@drawable/shift_on_popup_icon" key_type="3"/>
-      <toggle_state state_id="@string/toggle_cn_cand" label="'"
-        key_type="1"/>
+    <key
+        label="，"
+        width="12.550%p">
+      <toggle_state
+          code="-6"
+          icon="@drawable/smiley_popup_icon"
+          icon_popup="@drawable/smiley_popup_icon"
+          key_type="1"
+          state_id="@string/toggle_smiley" />
+      <toggle_state
+          code="-1"
+          icon="@drawable/shift_off_icon"
+          icon_popup="@drawable/shift_off_popup_icon"
+          key_type="1"
+          state_id="@string/toggle_en_lower" />
+      <toggle_state
+          code="-1"
+          icon="@drawable/shift_on_icon"
+          icon_popup="@drawable/shift_on_popup_icon"
+          key_type="2"
+          state_id="@string/toggle_en_upper" />
+      <toggle_state
+          key_type="1"
+          label="'"
+          state_id="@string/toggle_cn_cand" />
     </key>
     <keys start_pos_x="17.476%p" splitter="|" labels="Z|X|C|V|B|N|M"
       codes="54|52|31|50|30|42|41"/>
-    <key start_pos_x="84.008%p" width="12.550%p" code="67" key_type="6" repeat="true"/>
+    <key start_pos_x="84.008%p" width="12.550%p" code="67" key_type="1" repeat="true"/>
   </row>
 
-  <row width="20%p" row_id="@string/toggle_row_cn">
-    <key id="6"/>
-    <key id="4"/>
-    <key code="62" key_type="5" width="30.608%p"/>
-    <key label="。" width="14.696%p" icon="@drawable/period_full_icon"
-      icon_popup="@drawable/period_full_popup_icon"/>
-    <key id="1"/>
-  </row>
-
-  <row width="20%p" row_id="@string/toggle_row_en" start_pos_y="75%p">
-    <key id="6"/>
-    <key id="4"/>
-    <key code="62" key_type="5" width="30.608%p"/>
-    <key id="7"/>
-    <key id="1"/>
-  </row>
-
-  <row width="20%p" row_id="@string/toggle_row_uri" start_pos_y="75%p">
-    <key id="6"/>
-    <key id="4"/>
-    <key label="/" width="15.304%p"/>
-    <key code="62" key_type="5" width="15.304%p"/>
-    <key id="7"/>
-    <key id="1"/>
-  </row>
-
-  <row row_id="@string/toggle_row_emailaddress" start_pos_x="3.441%p" start_pos_y="73.529%p">
-    <key width="12.550%p" code="-2" label="中 文" key_type="6"
+  <row row_id="@string/toggle_row_cn" start_pos_x="3.441%p" start_pos_y="73.529%p">
+    <key width="12.550%p" code="-2" label="中 文" key_type="1"
         repeat="true">
       <toggle_state state_id="@string/toggle_en_lower" label="英 文" code="-2"/>
       <toggle_state state_id="@string/toggle_en_upper" label="英 文" code="-2"/>
     </key>
-    <key code="-3" width="12.550%p" key_type="6" label="\?123"/>
-    <key label="\@"/>
-    <key code="62" key_type="5" width="31.983%p" label="Space" balloon="false"/>
+    <key code="-3" width="12.550%p" key_type="1" label="\?123"/>
+    <key code="62" key_type="0" width="41.43%p" label="Space" balloon="false"/>
+    <key label="。" key_type="0" icon_popup="@drawable/period_full_popup_icon"/>
+    <key width="17.408%p"  code="66" key_type="1">
+      <toggle_state state_id="@string/toggle_enter_go" label="去往" code="66"/>
+      <toggle_state state_id="@string/toggle_enter_search" code="66"
+          icon="@drawable/search_icon" icon_popup="@drawable/search_popup_icon"/>
+      <toggle_state state_id="@string/toggle_enter_send" label="发送" code="66"/>
+      <toggle_state state_id="@string/toggle_enter_next" label="下一个" code="66"/>
+      <toggle_state state_id="@string/toggle_enter_done" label="完成" code="66"/>
+    </key>
+  </row>
+
+  <row row_id="@string/toggle_row_en" start_pos_x="3.441%p" start_pos_y="73.529%p">
+    <key width="12.550%p" code="-2" label="中 文" key_type="1"
+        repeat="true">
+      <toggle_state state_id="@string/toggle_en_lower" label="英 文" code="-2"/>
+      <toggle_state state_id="@string/toggle_en_upper" label="英 文" code="-2"/>
+    </key>
+    <key code="-3" width="12.550%p" key_type="1" label="\?123"/>
+    <key code="62" key_type="0" width="41.43%p" label="Space" balloon="false"/>
     <key label="." key_type="0" icon_popup="@drawable/period_popup_icon"/>
-    <key width="17.408%p"  code="66" key_type="6">
+    <key width="17.408%p"  code="66" key_type="1">
+      <toggle_state state_id="@string/toggle_enter_go" label="去往" code="66"/>
+      <toggle_state state_id="@string/toggle_enter_search" code="66"
+          icon="@drawable/search_icon" icon_popup="@drawable/search_popup_icon"/>
+      <toggle_state state_id="@string/toggle_enter_send" label="发送" code="66"/>
+      <toggle_state state_id="@string/toggle_enter_next" label="下一个" code="66"/>
+      <toggle_state state_id="@string/toggle_enter_done" label="完成" code="66"/>
+    </key>
+  </row>
+
+  <row row_id="@string/toggle_row_uri" start_pos_x="3.441%p" start_pos_y="73.529%p">
+    <key width="12.550%p" code="-2" label="中 文" key_type="1"
+        repeat="true">
+      <toggle_state state_id="@string/toggle_en_lower" label="英 文" code="-2"/>
+      <toggle_state state_id="@string/toggle_en_upper" label="英 文" code="-2"/>
+    </key>
+    <key code="-3" width="12.550%p" key_type="1" label="\?123"/>
+    <key label="/"/>
+    <key code="62" key_type="0" width="31.983%p" label="Space" balloon="false"/>
+    <key label="." key_type="0" icon_popup="@drawable/period_popup_icon"/>
+    <key width="17.408%p"  code="66" key_type="1">
+      <toggle_state state_id="@string/toggle_enter_go" label="去往" code="66"/>
+      <toggle_state state_id="@string/toggle_enter_search" code="66"
+          icon="@drawable/search_icon" icon_popup="@drawable/search_popup_icon"/>
+      <toggle_state state_id="@string/toggle_enter_send" label="发送" code="66"/>
+      <toggle_state state_id="@string/toggle_enter_next" label="下一个" code="66"/>
+      <toggle_state state_id="@string/toggle_enter_done" label="完成" code="66"/>
+    </key>
+  </row>
+
+  <row row_id="@string/toggle_row_emailaddress" start_pos_x="3.441%p" start_pos_y="73.529%p">
+    <key width="12.550%p" code="-2" label="中 文" key_type="1"
+        repeat="true">
+      <toggle_state state_id="@string/toggle_en_lower" label="英 文" code="-2"/>
+      <toggle_state state_id="@string/toggle_en_upper" label="英 文" code="-2"/>
+    </key>
+    <key code="-3" width="12.550%p" key_type="1" label="\?123"/>
+    <key label="\@"/>
+    <key code="62" key_type="0" width="31.983%p" label="Space" balloon="false"/>
+    <key label="." key_type="0" icon_popup="@drawable/period_popup_icon"/>
+    <key width="17.408%p"  code="66" key_type="1">
       <toggle_state state_id="@string/toggle_enter_go" label="去往" code="66"/>
       <toggle_state state_id="@string/toggle_enter_search" code="66"
           icon="@drawable/search_icon" icon_popup="@drawable/search_popup_icon"/>

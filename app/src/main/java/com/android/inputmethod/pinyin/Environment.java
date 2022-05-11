@@ -55,13 +55,13 @@ public class Environment {
      * How much should the balloon width be larger than width of the real key.
      * It is relative to the smaller one of screen width and height.
      */
-    private static final float KEY_BALLOON_WIDTH_PLUS_RATIO = 0.08f;
+    private static final float KEY_BALLOON_WIDTH_PLUS_RATIO = 0.00f;
 
     /**
      * How much should the balloon height be larger than that of the real key.
      * It is relative to the smaller one of screen width and height.
      */
-    private static final float KEY_BALLOON_HEIGHT_PLUS_RATIO = 0.07f;
+    private static final float KEY_BALLOON_HEIGHT_PLUS_RATIO = 0.0f;
 
     /**
      * The text size for normal keys. It is relative to the smaller one of
@@ -79,13 +79,13 @@ public class Environment {
      * The text size balloons of normal keys. It is relative to the smaller one
      * of screen width and height.
      */
-    private static final float NORMAL_BALLOON_TEXT_SIZE_RATIO = 0.14f;
+    private static final float NORMAL_BALLOON_TEXT_SIZE_RATIO = 0.1f;
 
     /**
      * The text size balloons of function keys. It is relative to the smaller
      * one of screen width and height.
      */
-    private static final float FUNCTION_BALLOON_TEXT_SIZE_RATIO = 0.085f;
+    private static final float FUNCTION_BALLOON_TEXT_SIZE_RATIO = 0.06f;
 
     /**
      * The configurations are managed in a singleton.

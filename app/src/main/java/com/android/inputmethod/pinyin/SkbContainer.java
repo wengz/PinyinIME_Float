@@ -230,9 +230,9 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
         } else {
             mYBiasCorrection = Y_BIAS_CORRECTION;
         }
-        mBalloonPopup = new BalloonHint(context, this, MeasureSpec.AT_MOST);
+        mBalloonPopup = new BalloonHint(context, this, MeasureSpec.AT_MOST, 0);
         if (POPUPWINDOW_FOR_PRESSED_UI) {
-            mBalloonOnKey = new BalloonHint(context, this, MeasureSpec.AT_MOST);
+            mBalloonOnKey = new BalloonHint(context, this, MeasureSpec.AT_MOST, 0);
         }
 
         mPopupSkb = new PopupWindow(getContext());

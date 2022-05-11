@@ -15,61 +15,84 @@
 -->
 <keyboard
   skb_template="@xml/skb_template1"
-  width="25%p"
-  height="25%p"
+  width="21.457%p"
+  height="23.529%p"
+  key_xmargin="0.607%p"
+  key_ymargin="1.960%p"
   key_type="0"
   repeat="false"
   balloon="false">
+    <!-- . - | 等待 暂停 -->
+    <row width="14.17%p" height="35.294%p" start_pos_x="3.441%p" start_pos_y="2.941%p">
+        <key label=".">
+            <toggle_state state_id="@string/toggle_phone_sym" label="等待" code="51"/>
+        </key>
+        <key start_pos_x="82.388%p" label="-">
+            <toggle_state state_id="@string/toggle_phone_sym" label="暂停" code="44"/>
+        </key>
+    </row>
 
-  <row>
-    <key icon="@drawable/num1" code="8">
-      <toggle_state state_id="@string/toggle_phone_sym" label="("/>
-    </key>
-    <key icon="@drawable/num2" code="9">
-      <toggle_state state_id="@string/toggle_phone_sym" label="/"/>
-    </key>
-    <key icon="@drawable/num3" code="10">
-      <toggle_state state_id="@string/toggle_phone_sym" label=")"/>
-    </key>
-    <key label="-"/>
-  </row>
+    <!-- Enter 删除 -->
+    <row width="14.17%p" height="35.294%p" start_pos_x="3.441%p" start_pos_y="38.235%p">
+        <key code="66" key_type="1" balloon="false">
+            <toggle_state state_id="@string/toggle_enter_go" label="去往" code="66"/>
+            <toggle_state state_id="@string/toggle_enter_search" code="66"
+                icon="@drawable/search_icon" icon_popup="@drawable/search_popup_icon"/>
+            <toggle_state state_id="@string/toggle_enter_send" label="发送" code="66"/>
+            <toggle_state state_id="@string/toggle_enter_next" label="下一个" code="66"/>
+            <toggle_state state_id="@string/toggle_enter_done" label="完成" code="66"/>
+        </key>
+        <key start_pos_x="82.388%p" code="67" key_type="1" repeat="true"/>
+    </row>
 
-  <row>
-    <key icon="@drawable/num4" code="11">
-      <toggle_state state_id="@string/toggle_phone_sym" label="N"/>
-    </key>
-    <key icon="@drawable/num5" code="12">
-      <toggle_state state_id="@string/toggle_phone_sym" label="暂 停" code="44"/>
-    </key>
-    <key icon="@drawable/num6" code="13">
-      <toggle_state state_id="@string/toggle_phone_sym" label=","/>
-    </key>
-    <key label="."/>
-  </row>
+    <!-- 符号 0 Space | 123 N Space -->
+    <row start_pos_x="3.441%p" start_pos_y="73.529%p">
+        <key width="35.762%p" height="23.529%p" label="符号" code="-4" repeat="true" key_type="1">
+            <toggle_state state_id="@string/toggle_phone_sym" label="123" code="-4"/>
+        </key>
+        <key label="0" code="7">
+            <toggle_state state_id="@string/toggle_phone_sym" label="N"/>
+        </key>
+        <key width="35.762%p" height="23.529%p" code="62" key_type="1" label="Space"/>
+    </row>
 
-  <row>
-    <key icon="@drawable/num7" code="14">
-      <toggle_state state_id="@string/toggle_phone_sym" label="*"
-        icon="@drawable/numstar"/>
-    </key>
-    <key icon="@drawable/num8" code="15">
-      <toggle_state state_id="@string/toggle_phone_sym" label="等 待" code="51"/>
-    </key>
-    <key icon="@drawable/num9" code="16">
-      <toggle_state state_id="@string/toggle_phone_sym" label="\#"/>
-        icon="@drawable/numpound"/>
-    </key>
-    <key code="67" key_type="1" repeat="true"/>
-  </row>
+    <!-- 1 2 3 | ( ) / -->
+    <row start_pos_x="17.746%p" start_pos_y="2.941%p">
+        <key label="1" code="8">
+            <toggle_state state_id="@string/toggle_phone_sym" label="("/>
+        </key>
+        <key label="2" code="9">
+            <toggle_state state_id="@string/toggle_phone_sym" label=")"/>
+        </key>
+        <key label="3" code="10">
+            <toggle_state state_id="@string/toggle_phone_sym" label="/"/>
+        </key>
+    </row>
 
-  <row>
-    <key icon="@drawable/numalt" code="-4" repeat="true">
-      <toggle_state state_id="@string/toggle_phone_sym" label="123" code="-4"/>
-    </key>
-    <key icon="@drawable/num0" code="7">
-      <toggle_state state_id="@string/toggle_phone_sym" label="+"/>
-    </key>
-    <key code="62"/>
-    <key id="2"/>
-  </row>
+    <!-- 4 5 6 | , . - -->
+    <row start_pos_x="17.746%p" start_pos_y="26.47%p">
+        <key label="4" code="11">
+            <toggle_state state_id="@string/toggle_phone_sym" label=","/>
+        </key>
+        <key label="5" code="12">
+            <toggle_state state_id="@string/toggle_phone_sym" label="."/>
+        </key>
+        <key label="6" code="13">
+            <toggle_state state_id="@string/toggle_phone_sym" label="-"/>
+        </key>
+    </row>
+
+    <!-- 7 8 9 | * # + -->
+    <row start_pos_x="17.746%p" start_pos_y="50%p">
+        <key label="7" code="14">
+            <toggle_state state_id="@string/toggle_phone_sym" label="*"/>
+        </key>
+        <key label="8" code="15">
+            <toggle_state state_id="@string/toggle_phone_sym" label="\#"/>
+        </key>
+        <key label="9" code="16">
+            <toggle_state state_id="@string/toggle_phone_sym" label="+"/>
+        </key>
+    </row>
+
 </keyboard>

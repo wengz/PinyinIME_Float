@@ -950,9 +950,9 @@ public class PinyinIME extends InputMethodService {
 
         // Create balloon hint for candidates view.
         mCandidatesBalloon = new BalloonHint(this, mCandidatesContainer,
-                MeasureSpec.UNSPECIFIED);
+                MeasureSpec.UNSPECIFIED, 10);
         mCandidatesBalloon.setBalloonBackground(getResources().getDrawable(
-                R.drawable.candidate_balloon_bg));
+                R.drawable.candidate_balloon_hint_bg));
         mCandidatesContainer.initialize(mChoiceNotifier, mCandidatesBalloon,
                 mGestureDetectorCandidates);
 

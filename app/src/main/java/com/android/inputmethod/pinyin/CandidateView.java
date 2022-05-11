@@ -366,7 +366,7 @@ public class CandidateView extends View {
 
     private void onSizeChanged() {
         mContentWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
-        mContentHeight = (int) ((getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) * 0.95f);
+        mContentHeight = (int) ((getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) * 0.5f);
         /**
          * How to decide the font size if the height for display is given?
          * Now it is implemented in a stupid way.
@@ -696,7 +696,7 @@ public class CandidateView extends View {
         int desired_width = (int) (r.right - r.left);
         int desired_height = (int) (r.bottom - r.top);
         mBalloonHint.setBalloonConfig(mDecInfo.mCandidatesList
-                        .get(mDecInfo.mPageStart.get(mPageNo) + candPos), 44, true,
+                        .get(mDecInfo.mPageStart.get(mPageNo) + candPos), 24, true,
                 mImeCandidateColor, desired_width, desired_height);
 
         if (Environment.getInstance().needFloatInputMode()) {
