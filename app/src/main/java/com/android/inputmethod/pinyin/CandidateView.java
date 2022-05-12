@@ -696,7 +696,7 @@ public class CandidateView extends View {
         int desired_width = (int) (r.right - r.left);
         int desired_height = (int) (r.bottom - r.top);
         mBalloonHint.setBalloonConfig(mDecInfo.mCandidatesList
-                        .get(mDecInfo.mPageStart.get(mPageNo) + candPos), 24, true,
+                        .get(mDecInfo.mPageStart.get(mPageNo) + candPos), 48, true,
                 mImeCandidateColor, desired_width, desired_height);
 
         if (Environment.getInstance().needFloatInputMode()) {

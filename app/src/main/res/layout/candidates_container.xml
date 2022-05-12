@@ -27,7 +27,7 @@
 
         <!-- 候选词区域 -->
         <RelativeLayout
-            android:layout_width="591px"
+            android:layout_width="1182px"
             android:layout_height="match_parent">
 
             <ImageButton
@@ -91,7 +91,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="center"
-                android:src="@drawable/btn_drag" />
+                android:src="@drawable/selector_btn_drag" />
 
             <ImageView
                 android:id="@+id/btn_hide"
@@ -99,7 +99,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="center"
-                android:src="@drawable/btn_hide" />
+                android:src="@drawable/selector_btn_hide" />
 
         </LinearLayout>
 

@@ -115,12 +115,12 @@ public class Environment {
         return mInstance;
     }
 
-    public static final int LANDSCAPE_KEY_HEIGHT = 80;
-    public static final int LANDSCAPE_SKB_WIDTH = 741;
-    public static final int LANDSCAPE_SKB_HEIGHT = 306;
-    public static final int LANDSCAPE_CANDIDATE_AREA_HEIGHT = 54;
-    public static final int LANDSCAPE_SKB_PREDICT_HEIGHT = 462;
-    public static final int LANDSCAPE_SKB_VIEW_MARGIN = 30;
+    public static final int LANDSCAPE_KEY_HEIGHT = 160;
+    public static final int LANDSCAPE_SKB_WIDTH = 1482;
+    public static final int LANDSCAPE_SKB_HEIGHT = 612;
+    public static final int LANDSCAPE_CANDIDATE_AREA_HEIGHT = 108;
+    public static final int LANDSCAPE_SKB_PREDICT_HEIGHT = 924;
+    public static final int LANDSCAPE_SKB_VIEW_MARGIN = 60;
 
     public void onConfigurationChanged(Configuration newConfig, Context context) {
         if (mConfig.orientation != newConfig.orientation) {

@@ -89,7 +89,7 @@ public class PinyinIME extends InputMethodService {
 
     /**
      * The floating container which contains the composing view. If necessary,
-     * some other view like candiates container can also be put here.
+     * some other view like candidates container can also be put here.
      */
     private LinearLayout mFloatingContainer;
 
@@ -950,7 +950,7 @@ public class PinyinIME extends InputMethodService {
 
         // Create balloon hint for candidates view.
         mCandidatesBalloon = new BalloonHint(this, mCandidatesContainer,
-                MeasureSpec.UNSPECIFIED, 10);
+                MeasureSpec.UNSPECIFIED, 20);
         mCandidatesBalloon.setBalloonBackground(getResources().getDrawable(
                 R.drawable.candidate_balloon_hint_bg));
         mCandidatesContainer.initialize(mChoiceNotifier, mCandidatesBalloon,
@@ -992,6 +992,8 @@ public class PinyinIME extends InputMethodService {
                         case MotionEvent.ACTION_DOWN:
                             lastTouchX = event.getRawX();
                             lastTouchY = event.getRawY();
+                            mBtnDrag.setActivated(true);
+
                             break;
 
                         case MotionEvent.ACTION_MOVE:
@@ -1002,14 +1004,23 @@ public class PinyinIME extends InputMethodService {
                             updatePositionRelative((int)deltaX, (int)deltaY);
                             lastTouchX = curTouchX;
                             lastTouchY = curTouchY;
-                            break;
 
+                            break;
+                        case MotionEvent.ACTION_CANCEL:
                         case MotionEvent.ACTION_UP:
+                            mBtnDrag.setActivated(false);
+
                             break;
                     }
                     return true;
                 }
             });
+        mBtnHide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideWindow();
+            }
+        });
     }
 
     public void responseSoftKeyEvent(SoftKey sKey) {
