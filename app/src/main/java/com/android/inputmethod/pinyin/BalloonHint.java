@@ -37,12 +37,12 @@ public class BalloonHint extends PopupWindow {
     /**
      * Delayed time to show the balloon hint.
      */
-    public static final int TIME_DELAY_SHOW = 0;
+    public static final int TIME_DELAY_SHOW = 200;
 
     /**
      * Delayed time to dismiss the balloon hint.
      */
-    public static final int TIME_DELAY_DISMISS = 200;
+    public static final int TIME_DELAY_DISMISS = 0;
     /**
      * The content view of the balloon.
      */

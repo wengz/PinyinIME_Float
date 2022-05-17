@@ -1101,7 +1101,10 @@ public class PinyinIME extends InputMethodService {
         updateComposingText(showComposingView);
         mCandidatesContainer.showCandidates(mDecInfo,
                 ImeState.STATE_COMPOSING != mImeState);
-        mFloatingWindowTimer.postShowFloatingWindow();
+
+        if (showComposingView) {
+            mFloatingWindowTimer.postShowFloatingWindow();
+        }
     }
 
     private void dismissCandidateWindow() {

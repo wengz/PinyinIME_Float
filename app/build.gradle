@@ -45,13 +45,13 @@ android {
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.php
+            signingConfig signingConfigs.aoc
         }
 
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.php
+            signingConfig signingConfigs.aoc
         }
     }
     externalNativeBuild {
