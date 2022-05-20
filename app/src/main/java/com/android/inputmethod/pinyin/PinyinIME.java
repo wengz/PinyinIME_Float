@@ -1294,7 +1294,7 @@ public class PinyinIME extends InputMethodService {
             if (mLastFloatInputOffsetY != -1) {
                 return mLastFloatInputOffsetY;
             }
-            return DEFAULT_FLOAT_INPUT_OFFSET;
+            return (mEnvironment.getScreenHeight() - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT)/2;
         }
     }
 
