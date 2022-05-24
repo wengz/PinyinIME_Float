@@ -1263,14 +1263,17 @@ public class PinyinIME extends InputMethodService {
         mFloatInputLayoutParam.height = WindowManager.LayoutParams.WRAP_CONTENT;
     }
 
-    private static final int DEFAULT_FLOAT_INPUT_OFFSET = 400;
+    private static final int INIT_DISPLAY_LEFT_OFFSET_TO_INPUT = 200;
+    private static final int SIDE_BAR_ICON_WIDTH = 84;
     private int mLastFloatInputOffsetX = -1;
     private int mLastFloatInputOffsetY = -1;
 
     private int getFloatInputX() {
         if (mServedViewBound != null) {
-            int hOffset = (mServedViewBound.width() - Environment.LANDSCAPE_SKB_WIDTH)/2;
-            return mServedViewBound.left + hOffset;
+            int xPosition = mServedViewBound.left + INIT_DISPLAY_LEFT_OFFSET_TO_INPUT;
+            int xPositionLimit = Environment.getInstance().getScreenWidth() - SIDE_BAR_ICON_WIDTH - Environment.LANDSCAPE_SKB_WIDTH;
+            xPosition = Math.min(xPosition, xPositionLimit);
+            return xPosition;
         } else {
             if (mLastFloatInputOffsetX != -1) {
                 return mLastFloatInputOffsetX;
@@ -1286,9 +1289,14 @@ public class PinyinIME extends InputMethodService {
             if ((remainSpace < Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
                     && (mServedViewBound.top > Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
             ) {
+                //显示在输入框上方
                 return mServedViewBound.top - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT - Environment.LANDSCAPE_SKB_VIEW_MARGIN;
             } else {
-                return mServedViewBound.bottom + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+                //显示在输入框下方
+                int yPosition = mServedViewBound.bottom + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+                int yPositionLimit = (mEnvironment.getScreenHeight() - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT)/2;
+                yPosition = Math.max(yPosition, yPositionLimit);
+                return yPosition;
             }
         } else {
             if (mLastFloatInputOffsetY != -1) {
