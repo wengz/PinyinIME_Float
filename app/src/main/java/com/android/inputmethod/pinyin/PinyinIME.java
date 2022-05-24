@@ -1440,7 +1440,7 @@ public class PinyinIME extends InputMethodService {
         void postShowFloatingWindow() {
             mFloatingContainer.measure(LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT);
-            mFloatingWindow.setWidth(mFloatingContainer.getMeasuredWidth());
+            mFloatingWindow.setWidth(2000);
             mFloatingWindow.setHeight(mFloatingContainer.getMeasuredHeight());
             post(this);
         }
@@ -1463,7 +1463,7 @@ public class PinyinIME extends InputMethodService {
                 mFloatingWindow
                         .update(mParentLocation[0],
                                 mParentLocation[1] - mFloatingWindow.getHeight(),
-                                mFloatingWindow.getWidth(),
+                                2000,
                                 mFloatingWindow.getHeight());
             }
         }
