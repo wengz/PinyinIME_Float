@@ -639,7 +639,7 @@ public class CandidateView extends View {
     public boolean onTouchEventReal(MotionEvent event) {
         // The page in the background can also be touched.
         if (null == mDecInfo || !mDecInfo.pageReady(mPageNo)
-                || mPageNoCalculated != mPageNo) return true;
+                || mPageNoCalculated != mPageNo || mDecInfo.isCandidatesListEmpty()) return false;
 
         int x, y;
         x = (int) event.getX();

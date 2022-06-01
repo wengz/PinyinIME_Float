@@ -384,8 +384,7 @@ public class CandidatesContainer extends RelativeLayout implements
     public boolean onTouchEvent(MotionEvent event) {
         event.offsetLocation(-xOffsetForFlipper, 0);
         CandidateView cv = (CandidateView) mFlipper.getCurrentView();
-        cv.onTouchEventReal(event);
-        return true;
+        return cv.onTouchEventReal(event);
     }
 
     public void loadAnimation(boolean animLeftRight, boolean forward) {

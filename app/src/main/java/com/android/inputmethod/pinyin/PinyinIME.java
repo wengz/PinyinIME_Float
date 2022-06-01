@@ -978,43 +978,44 @@ public class PinyinIME extends InputMethodService {
         }
     }
 
+    private View.OnTouchListener mDragTouchListener = new View.OnTouchListener() {
+
+        float lastTouchX;
+        float lastTouchY;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getActionMasked()){
+                case MotionEvent.ACTION_DOWN:
+                    lastTouchX = event.getRawX();
+                    lastTouchY = event.getRawY();
+                    mBtnDrag.setActivated(true);
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
+                    float curTouchX = event.getRawX();
+                    float curTouchY = event.getRawY();
+                    float deltaX = curTouchX - lastTouchX;
+                    float deltaY = curTouchY - lastTouchY;
+                    updatePositionRelative((int)deltaX, (int)deltaY);
+                    lastTouchX = curTouchX;
+                    lastTouchY = curTouchY;
+                    break;
+
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_UP:
+                    mBtnDrag.setActivated(false);
+
+                    break;
+            }
+            return true;
+        }
+    };
+
     private void initCandidateButtons() {
-            mBtnDrag = mLandscapeFloatInputContainer.findViewById(R.id.btn_drag);
-            mBtnHide = mLandscapeFloatInputContainer.findViewById(R.id.btn_hide);
-            mBtnDrag.setOnTouchListener(new View.OnTouchListener() {
-
-                float lastTouchX;
-                float lastTouchY;
-
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    switch (event.getActionMasked()){
-                        case MotionEvent.ACTION_DOWN:
-                            lastTouchX = event.getRawX();
-                            lastTouchY = event.getRawY();
-                            mBtnDrag.setActivated(true);
-
-                            break;
-
-                        case MotionEvent.ACTION_MOVE:
-                            float curTouchX = event.getRawX();
-                            float curTouchY = event.getRawY();
-                            float deltaX = curTouchX - lastTouchX;
-                            float deltaY = curTouchY - lastTouchY;
-                            updatePositionRelative((int)deltaX, (int)deltaY);
-                            lastTouchX = curTouchX;
-                            lastTouchY = curTouchY;
-
-                            break;
-                        case MotionEvent.ACTION_CANCEL:
-                        case MotionEvent.ACTION_UP:
-                            mBtnDrag.setActivated(false);
-
-                            break;
-                    }
-                    return true;
-                }
-            });
+        mBtnDrag = mLandscapeFloatInputContainer.findViewById(R.id.btn_drag);
+        mBtnHide = mLandscapeFloatInputContainer.findViewById(R.id.btn_hide);
+        mBtnDrag.setOnTouchListener(mDragTouchListener);
         mBtnHide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1170,6 +1171,7 @@ public class PinyinIME extends InputMethodService {
             mLandscapeFloatInputContainer = inflater.inflate(R.layout.float_input_container, null);
             mSkbContainer = mLandscapeFloatInputContainer.findViewById(R.id.skb_container);
             mLandscapeFloatCandidateContainer = mLandscapeFloatInputContainer.findViewById(R.id.candidate_container);
+            mLandscapeFloatCandidateContainer.setOnTouchListener(mDragTouchListener);
             mSkbContainer.setService(this);
             mSkbContainer.setInputModeSwitcher(mInputModeSwitcher);
             mSkbContainer.setGestureDetector(mGestureDetectorSkb);
@@ -1186,10 +1188,21 @@ public class PinyinIME extends InputMethodService {
         }
     }
 
+    /**
+     *
+     */
     private void updatePositionRelative(int deltaX, int deltaY){
         mFloatInputLayoutParam.x += deltaX;
         mFloatInputLayoutParam.y += deltaY;
+        manualLimitInScreen();
         mWindowManager.updateViewLayout(mLandscapeFloatInputContainer, mFloatInputLayoutParam);
+    }
+
+    private void manualLimitInScreen() {
+        int xLimitMax = Environment.getInstance().getScreenWidth() - Environment.LANDSCAPE_SKB_WIDTH;
+        int yLimitMax = Environment.getInstance().getScreenHeight() - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT;
+        mFloatInputLayoutParam.x = Math.min(Math.max(0, mFloatInputLayoutParam.x), xLimitMax);
+        mFloatInputLayoutParam.y = Math.min(Math.max(0, mFloatInputLayoutParam.y), yLimitMax);
     }
 
     @Override
@@ -1241,7 +1254,7 @@ public class PinyinIME extends InputMethodService {
         setCandidatesViewShown(false);
 
         if (mEnvironment.needFloatInputMode()) {
-            setFloatInputLayoutParam();
+            setFloatInputLayoutParam(editorInfo, restarting);
             mWindowManager.addView(mLandscapeFloatInputContainer, mFloatInputLayoutParam);
         }
     }
@@ -1250,28 +1263,42 @@ public class PinyinIME extends InputMethodService {
     private WindowManager.LayoutParams mFloatInputLayoutParam;
     private Rect mServedViewBound;
 
-    private void setFloatInputLayoutParam() {
+    private int mLastFieldId = -1;
+
+    private void setFloatInputLayoutParam(EditorInfo editorInfo, boolean restarting) {
         mFloatInputLayoutParam = new WindowManager.LayoutParams();
         mFloatInputLayoutParam.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        mFloatInputLayoutParam.format = PixelFormat.RGBA_8888;
-        mFloatInputLayoutParam.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 
+        mFloatInputLayoutParam.format = PixelFormat.RGBA_8888;
+        /**
+         * 不添加【FLAG_LAYOUT_NO_LIMITS】，输入法弹窗在屏幕边界时出现拖拽卡顿，位置更新得不到及时响应。
+         * 在{@link #manualLimitInScreen()}中手动进行位置限制。
+         */
+        mFloatInputLayoutParam.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
         mFloatInputLayoutParam.gravity = Gravity.LEFT | Gravity.TOP;
-        mFloatInputLayoutParam.x = getFloatInputX();
-        mFloatInputLayoutParam.y = getFloatInputY();
+
+        boolean sameFieldId = false;
+        if (editorInfo.fieldId != 0) {
+            if (mLastFieldId == editorInfo.fieldId) {
+                sameFieldId = true;
+            }
+            mLastFieldId = editorInfo.fieldId;
+        }
+        mFloatInputLayoutParam.x = getFloatInputX(restarting||sameFieldId);
+        mFloatInputLayoutParam.y = getFloatInputY(restarting||sameFieldId);
         mFloatInputLayoutParam.width = Environment.LANDSCAPE_SKB_WIDTH;
         mFloatInputLayoutParam.height = WindowManager.LayoutParams.WRAP_CONTENT;
     }
 
-    private static final int INIT_DISPLAY_LEFT_OFFSET_TO_INPUT = 200;
+    private static final int INIT_DISPLAY_LEFT_OFFSET_TO_INPUT = 60;
     private static final int SIDE_BAR_ICON_WIDTH = 84;
     private int mLastFloatInputOffsetX = -1;
     private int mLastFloatInputOffsetY = -1;
 
-    private int getFloatInputX() {
-        if (mServedViewBound != null) {
+    private int getFloatInputX(boolean restarting) {
+        if (!restarting && mServedViewBound != null) {
             int xPosition = mServedViewBound.left + INIT_DISPLAY_LEFT_OFFSET_TO_INPUT;
-            int xPositionLimit = Environment.getInstance().getScreenWidth() - SIDE_BAR_ICON_WIDTH - Environment.LANDSCAPE_SKB_WIDTH;
+            int xPositionLimit = Environment.getInstance().getScreenWidth() - SIDE_BAR_ICON_WIDTH - Environment.LANDSCAPE_SKB_WIDTH - 3;
             xPosition = Math.min(xPosition, xPositionLimit);
             return xPosition;
         } else {
@@ -1282,8 +1309,8 @@ public class PinyinIME extends InputMethodService {
         }
     }
 
-    private int getFloatInputY() {
-        if (mServedViewBound != null) {
+    private int getFloatInputY(boolean restarting) {
+        if (!restarting && mServedViewBound != null) {
             int screenHeight = mEnvironment.getScreenHeight();
             int remainSpace = screenHeight - mServedViewBound.bottom;
             if ((remainSpace < Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
@@ -1440,7 +1467,7 @@ public class PinyinIME extends InputMethodService {
         void postShowFloatingWindow() {
             mFloatingContainer.measure(LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT);
-            mFloatingWindow.setWidth(2000);
+            mFloatingWindow.setWidth(Environment.LANDSCAPE_SKB_WIDTH);
             mFloatingWindow.setHeight(mFloatingContainer.getMeasuredHeight());
             post(this);
         }
@@ -1463,7 +1490,7 @@ public class PinyinIME extends InputMethodService {
                 mFloatingWindow
                         .update(mParentLocation[0],
                                 mParentLocation[1] - mFloatingWindow.getHeight(),
-                                2000,
+                                Environment.LANDSCAPE_SKB_WIDTH,
                                 mFloatingWindow.getHeight());
             }
         }
