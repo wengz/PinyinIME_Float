@@ -16,6 +16,8 @@
 
 package com.android.inputmethod.pinyin;
 
+import static android.inputmethodservice.InputMethodService.Insets.TOUCHABLE_INSETS_REGION;
+
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -1160,8 +1162,14 @@ public class PinyinIME extends InputMethodService {
     private View mLandscapeFloatInputContainer;
     private ViewGroup mLandscapeFloatCandidateContainer;
 
+    Handler mHandler;
+
     @Override
     public View onCreateInputView() {
+        if (mHandler == null) {
+            mHandler = new Handler(Looper.getMainLooper());
+        }
+
         if (mEnvironment.needDebug()) {
             Log.d(TAG, "onCreateInputView.");
         }
@@ -1176,8 +1184,9 @@ public class PinyinIME extends InputMethodService {
             mSkbContainer.setInputModeSwitcher(mInputModeSwitcher);
             mSkbContainer.setGestureDetector(mGestureDetectorSkb);
 
-            View fakeInputView = inflater.inflate(R.layout.input_space_holder, null);
-            return fakeInputView;
+            return mLandscapeFloatInputContainer;
+            //View fakeInputView = inflater.inflate(R.layout.input_space_holder, null);
+            //return fakeInputView;
         } else {
             mSkbContainer = (SkbContainer) inflater.inflate(R.layout.skb_container,
                     null);
@@ -1186,6 +1195,31 @@ public class PinyinIME extends InputMethodService {
             mSkbContainer.setGestureDetector(mGestureDetectorSkb);
             return mSkbContainer;
         }
+    }
+
+    @Override
+    public void onComputeInsets(Insets outInsets) {
+        super.onComputeInsets(outInsets);
+        outInsets.contentTopInsets = 10000;
+        //outInsets.visibleTopInsets = 10000;
+        outInsets.touchableInsets = TOUCHABLE_INSETS_REGION;
+        outInsets.touchableRegion.set(0,0, Environment.LANDSCAPE_SKB_WIDTH, Environment.LANDSCAPE_SKB_PREDICT_HEIGHT);
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLandscapeFloatInputContainer.requestLayout();
+            }
+        }, 5000);
+    }
+
+    @Override
+    public void onConfigureWindow(Window win, boolean isFullscreen, boolean isCandidatesOnly) {
+        WindowManager.LayoutParams layoutParams = win.getAttributes();
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.gravity = Gravity.TOP;
+        win.setAttributes(layoutParams);
     }
 
     /**
@@ -1215,8 +1249,6 @@ public class PinyinIME extends InputMethodService {
         updateIcon(mInputModeSwitcher.requestInputWithHkb(editorInfo));
         resetToIdleState(false);
     }
-
-    Handler mHandler;
 
     private void examineBoardSize() {
         int width = mLandscapeFloatInputContainer.getWidth();
@@ -1253,10 +1285,10 @@ public class PinyinIME extends InputMethodService {
         mSkbContainer.updateInputMode();
         setCandidatesViewShown(false);
 
-        if (mEnvironment.needFloatInputMode()) {
-            setFloatInputLayoutParam(editorInfo, restarting);
-            mWindowManager.addView(mLandscapeFloatInputContainer, mFloatInputLayoutParam);
-        }
+//        if (mEnvironment.needFloatInputMode()) {
+//            setFloatInputLayoutParam(editorInfo, restarting);
+//            mWindowManager.addView(mLandscapeFloatInputContainer, mFloatInputLayoutParam);
+//        }
     }
 
     public WindowManager mWindowManager;
@@ -1341,13 +1373,13 @@ public class PinyinIME extends InputMethodService {
         resetToIdleState(false);
         super.onFinishInputView(finishingInput);
 
-        if (mEnvironment.needFloatInputMode()) {
-            int[] locOnScreen = new int[2];
-            mLandscapeFloatInputContainer.getLocationOnScreen(locOnScreen);
-            mLastFloatInputOffsetX = locOnScreen[0];
-            mLastFloatInputOffsetY = locOnScreen[1];
-            mWindowManager.removeViewImmediate(mLandscapeFloatInputContainer);
-        }
+//        if (mEnvironment.needFloatInputMode()) {
+//            int[] locOnScreen = new int[2];
+//            mLandscapeFloatInputContainer.getLocationOnScreen(locOnScreen);
+//            mLastFloatInputOffsetX = locOnScreen[0];
+//            mLastFloatInputOffsetY = locOnScreen[1];
+//            mWindowManager.removeViewImmediate(mLandscapeFloatInputContainer);
+//        }
 
     }
 
