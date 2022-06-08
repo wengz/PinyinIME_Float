@@ -1,37 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
-    <FrameLayout
-        android:id="@+id/candidate_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <com.android.inputmethod.pinyin.SkbContainer
-        android:id="@+id/skb_container"
+    <LinearLayout
+        android:id="@+id/ime_window"
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <ViewFlipper
-            android:id="@+id/alpha_floatable"
-            android:layout_alignParentBottom="true"
+        <FrameLayout
+            android:id="@+id/candidate_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.android.inputmethod.pinyin.SkbContainer
+            android:id="@+id/skb_container"
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
-            <com.android.inputmethod.pinyin.SoftKeyboardView
-                android:id="@+id/alpha_view1"
+            <ViewFlipper
+                android:id="@+id/alpha_floatable"
+                android:layout_alignParentBottom="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <com.android.inputmethod.pinyin.SoftKeyboardView
-                android:id="@+id/alpha_view2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </ViewFlipper>
-    </com.android.inputmethod.pinyin.SkbContainer>
+                android:layout_height="wrap_content" >
 
-</LinearLayout>
+                <com.android.inputmethod.pinyin.SoftKeyboardView
+                    android:id="@+id/alpha_view1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <com.android.inputmethod.pinyin.SoftKeyboardView
+                    android:id="@+id/alpha_view2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </ViewFlipper>
+        </com.android.inputmethod.pinyin.SkbContainer>
+
+    </LinearLayout>
+
+</RelativeLayout>
+
+
 

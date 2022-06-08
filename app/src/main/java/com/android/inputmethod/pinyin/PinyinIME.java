@@ -52,6 +52,7 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1161,6 +1162,7 @@ public class PinyinIME extends InputMethodService {
 
     private View mLandscapeFloatInputContainer;
     private ViewGroup mLandscapeFloatCandidateContainer;
+    private View mImeWindow;
 
     Handler mHandler;
 
@@ -1177,6 +1179,7 @@ public class PinyinIME extends InputMethodService {
 
         if (mEnvironment.needFloatInputMode()) {
             mLandscapeFloatInputContainer = inflater.inflate(R.layout.float_input_container, null);
+            mImeWindow = mLandscapeFloatInputContainer.findViewById(R.id.ime_window);
             mSkbContainer = mLandscapeFloatInputContainer.findViewById(R.id.skb_container);
             mLandscapeFloatCandidateContainer = mLandscapeFloatInputContainer.findViewById(R.id.candidate_container);
             mLandscapeFloatCandidateContainer.setOnTouchListener(mDragTouchListener);
@@ -1203,14 +1206,11 @@ public class PinyinIME extends InputMethodService {
         outInsets.contentTopInsets = 10000;
         //outInsets.visibleTopInsets = 10000;
         outInsets.touchableInsets = TOUCHABLE_INSETS_REGION;
-        outInsets.touchableRegion.set(0,0, Environment.LANDSCAPE_SKB_WIDTH, Environment.LANDSCAPE_SKB_PREDICT_HEIGHT);
+        int[] location = new int[2];
+        mImeWindow.getLocationInWindow(location);
+        outInsets.touchableRegion.set(location[0], location[1],
+                location[0]+Environment.LANDSCAPE_SKB_WIDTH, location[1]+Environment.LANDSCAPE_SKB_PREDICT_HEIGHT);
 
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mLandscapeFloatInputContainer.requestLayout();
-            }
-        }, 5000);
     }
 
     @Override
@@ -1226,10 +1226,16 @@ public class PinyinIME extends InputMethodService {
      *
      */
     private void updatePositionRelative(int deltaX, int deltaY){
-        mFloatInputLayoutParam.x += deltaX;
-        mFloatInputLayoutParam.y += deltaY;
-        manualLimitInScreen();
-        mWindowManager.updateViewLayout(mLandscapeFloatInputContainer, mFloatInputLayoutParam);
+//        mFloatInputLayoutParam.x += deltaX;
+//        mFloatInputLayoutParam.y += deltaY;
+//        manualLimitInScreen();
+//        mWindowManager.updateViewLayout(mLandscapeFloatInputContainer, mFloatInputLayoutParam);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImeWindow.getLayoutParams();
+        layoutParams.leftMargin += deltaX;
+        layoutParams.topMargin += deltaY;
+        mImeWindow.setLayoutParams(layoutParams);
+        mImeWindow.requestLayout();
     }
 
     private void manualLimitInScreen() {
