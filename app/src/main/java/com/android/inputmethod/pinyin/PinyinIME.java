@@ -68,6 +68,7 @@ public class PinyinIME extends InputMethodService {
     static final String TAG = "PinyinIME";
 
     public static final String BUNDLE_KEY_SERVED_VIEW_BOUND = "com.tpv.xm.iwb.ime.BUNDLE_KEY_SERVED_VIEW_BOUND";
+    public static final String BUNDLE_KEY_SERVED_VIEW_OBJECT_ID = "com.tpv.xm.iwb.ime.BUNDLE_KEY_SERVED_VIEW_OBJECT_ID";
 
     /**
      * If is is true, IME will simulate key events for delete key, and send the
@@ -187,7 +188,6 @@ public class PinyinIME extends InputMethodService {
 
     @Override
     public void onCreate() {
-        mWindowManager = getSystemService(WindowManager.class);
         mEnvironment = Environment.getInstance();
         if (mEnvironment.needDebug()) {
             Log.d(TAG, "onCreate.");
@@ -1164,14 +1164,8 @@ public class PinyinIME extends InputMethodService {
     private ViewGroup mLandscapeFloatCandidateContainer;
     private View mImeWindow;
 
-    Handler mHandler;
-
     @Override
     public View onCreateInputView() {
-        if (mHandler == null) {
-            mHandler = new Handler(Looper.getMainLooper());
-        }
-
         if (mEnvironment.needDebug()) {
             Log.d(TAG, "onCreateInputView.");
         }
@@ -1186,10 +1180,7 @@ public class PinyinIME extends InputMethodService {
             mSkbContainer.setService(this);
             mSkbContainer.setInputModeSwitcher(mInputModeSwitcher);
             mSkbContainer.setGestureDetector(mGestureDetectorSkb);
-
             return mLandscapeFloatInputContainer;
-            //View fakeInputView = inflater.inflate(R.layout.input_space_holder, null);
-            //return fakeInputView;
         } else {
             mSkbContainer = (SkbContainer) inflater.inflate(R.layout.skb_container,
                     null);
@@ -1203,8 +1194,12 @@ public class PinyinIME extends InputMethodService {
     @Override
     public void onComputeInsets(Insets outInsets) {
         super.onComputeInsets(outInsets);
-        outInsets.contentTopInsets = 10000;
-        //outInsets.visibleTopInsets = 10000;
+
+        if (mImeWindow == null) {
+            return;
+        }
+
+        outInsets.contentTopInsets = Environment.getInstance().getScreenHeight();
         outInsets.touchableInsets = TOUCHABLE_INSETS_REGION;
         int[] location = new int[2];
         mImeWindow.getLocationInWindow(location);
@@ -1222,27 +1217,16 @@ public class PinyinIME extends InputMethodService {
         win.setAttributes(layoutParams);
     }
 
-    /**
-     *
-     */
     private void updatePositionRelative(int deltaX, int deltaY){
-//        mFloatInputLayoutParam.x += deltaX;
-//        mFloatInputLayoutParam.y += deltaY;
-//        manualLimitInScreen();
-//        mWindowManager.updateViewLayout(mLandscapeFloatInputContainer, mFloatInputLayoutParam);
-
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImeWindow.getLayoutParams();
-        layoutParams.leftMargin += deltaX;
-        layoutParams.topMargin += deltaY;
+        int newLeftMargin = layoutParams.leftMargin + deltaX;
+        int newTopMargin = layoutParams.topMargin + deltaY;
+        int xLimitMax = mImeWindow.getRootView().getWidth() - Environment.LANDSCAPE_SKB_WIDTH;
+        int yLimitMax = mImeWindow.getRootView().getHeight() - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT;
+        layoutParams.leftMargin = Math.min(Math.max(0, newLeftMargin), xLimitMax);
+        layoutParams.topMargin = Math.min(Math.max(0, newTopMargin), yLimitMax);
         mImeWindow.setLayoutParams(layoutParams);
         mImeWindow.requestLayout();
-    }
-
-    private void manualLimitInScreen() {
-        int xLimitMax = Environment.getInstance().getScreenWidth() - Environment.LANDSCAPE_SKB_WIDTH;
-        int yLimitMax = Environment.getInstance().getScreenHeight() - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT;
-        mFloatInputLayoutParam.x = Math.min(Math.max(0, mFloatInputLayoutParam.x), xLimitMax);
-        mFloatInputLayoutParam.y = Math.min(Math.max(0, mFloatInputLayoutParam.y), yLimitMax);
     }
 
     @Override
@@ -1256,24 +1240,8 @@ public class PinyinIME extends InputMethodService {
         resetToIdleState(false);
     }
 
-    private void examineBoardSize() {
-        int width = mLandscapeFloatInputContainer.getWidth();
-        int height = mLandscapeFloatInputContainer.getHeight();
-        Log.d(TAG, "examineBoardSize: width="+width+" height="+height);
-    }
-
     @Override
     public void onStartInputView(EditorInfo editorInfo, boolean restarting) {
-        if (mHandler == null) {
-            mHandler = new Handler(Looper.getMainLooper());
-        }
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                examineBoardSize();
-            }
-        }, 3000);
-
         if (mEnvironment.needDebug()) {
             Log.d(TAG, "onStartInputView " + " contentType: "
                     + String.valueOf(editorInfo.inputType) + " Restarting:"
@@ -1282,7 +1250,6 @@ public class PinyinIME extends InputMethodService {
 
         if (editorInfo.extras != null) {
             mServedViewBound = editorInfo.extras.getParcelable(BUNDLE_KEY_SERVED_VIEW_BOUND);
-            //mServedViewBound = new Rect(mServedViewBound.left/2, mServedViewBound.top/2, mServedViewBound.right/2, mServedViewBound.bottom/2);
             Log.d(TAG, "onStartInputView: mServedViewBound="+mServedViewBound);
         }
 
@@ -1291,41 +1258,35 @@ public class PinyinIME extends InputMethodService {
         mSkbContainer.updateInputMode();
         setCandidatesViewShown(false);
 
-//        if (mEnvironment.needFloatInputMode()) {
-//            setFloatInputLayoutParam(editorInfo, restarting);
-//            mWindowManager.addView(mLandscapeFloatInputContainer, mFloatInputLayoutParam);
-//        }
+        setFloatInputLayoutParam(editorInfo, restarting);
     }
 
-    public WindowManager mWindowManager;
-    private WindowManager.LayoutParams mFloatInputLayoutParam;
     private Rect mServedViewBound;
 
-    private int mLastFieldId = -1;
+    private static final int NO_OBJECT_ID = -1;
+
+    private int mLastFieldId = View.NO_ID;
+    private int mLastEditorObjectId = NO_OBJECT_ID;
 
     private void setFloatInputLayoutParam(EditorInfo editorInfo, boolean restarting) {
-        mFloatInputLayoutParam = new WindowManager.LayoutParams();
-        mFloatInputLayoutParam.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-
-        mFloatInputLayoutParam.format = PixelFormat.RGBA_8888;
-        /**
-         * 不添加【FLAG_LAYOUT_NO_LIMITS】，输入法弹窗在屏幕边界时出现拖拽卡顿，位置更新得不到及时响应。
-         * 在{@link #manualLimitInScreen()}中手动进行位置限制。
-         */
-        mFloatInputLayoutParam.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
-        mFloatInputLayoutParam.gravity = Gravity.LEFT | Gravity.TOP;
-
-        boolean sameFieldId = false;
-        if (editorInfo.fieldId != 0) {
-            if (mLastFieldId == editorInfo.fieldId) {
-                sameFieldId = true;
-            }
-            mLastFieldId = editorInfo.fieldId;
+        boolean sameField = false;
+        int editorObjectId = editorInfo.extras.getInt(BUNDLE_KEY_SERVED_VIEW_OBJECT_ID, NO_OBJECT_ID);
+        if (editorInfo.fieldId == mLastFieldId && editorObjectId == mLastEditorObjectId ) {
+            sameField = true;
         }
-        mFloatInputLayoutParam.x = getFloatInputX(restarting||sameFieldId);
-        mFloatInputLayoutParam.y = getFloatInputY(restarting||sameFieldId);
-        mFloatInputLayoutParam.width = Environment.LANDSCAPE_SKB_WIDTH;
-        mFloatInputLayoutParam.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        mLastFieldId = editorInfo.fieldId;
+        mLastEditorObjectId = editorObjectId;
+
+        //系统的回调参数 restarting 在同一个输入框上隐藏再显示键盘，回调值为false。
+        if (!restarting) {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImeWindow.getLayoutParams();
+            layoutParams.leftMargin = getFloatInputX(sameField);
+            layoutParams.topMargin = getFloatInputY(sameField);
+
+            Log.d(TAG, "setFloatInputLayoutParam: layoutParams.leftMargin="+layoutParams.leftMargin+" layoutParams.topMargin="+layoutParams.topMargin);
+            mImeWindow.setLayoutParams(layoutParams);
+            mImeWindow.requestLayout();
+        }
     }
 
     private static final int INIT_DISPLAY_LEFT_OFFSET_TO_INPUT = 60;
@@ -1333,23 +1294,26 @@ public class PinyinIME extends InputMethodService {
     private int mLastFloatInputOffsetX = -1;
     private int mLastFloatInputOffsetY = -1;
 
-    private int getFloatInputX(boolean restarting) {
-        if (!restarting && mServedViewBound != null) {
+    private int getFloatInputX(boolean sameField) {
+        int screenWidth = Environment.getInstance().getScreenWidth();
+        if (!sameField && mServedViewBound != null) {
             int xPosition = mServedViewBound.left + INIT_DISPLAY_LEFT_OFFSET_TO_INPUT;
-            int xPositionLimit = Environment.getInstance().getScreenWidth() - SIDE_BAR_ICON_WIDTH - Environment.LANDSCAPE_SKB_WIDTH - 3;
-            xPosition = Math.min(xPosition, xPositionLimit);
+            int gap = 3;
+            int xPositionMinLimit = SIDE_BAR_ICON_WIDTH + gap;
+            int xPositionMaxLimit = screenWidth - SIDE_BAR_ICON_WIDTH - Environment.LANDSCAPE_SKB_WIDTH - gap;
+            xPosition = Math.min(Math.max(xPosition, xPositionMinLimit), xPositionMaxLimit);
             return xPosition;
         } else {
             if (mLastFloatInputOffsetX != -1) {
                 return mLastFloatInputOffsetX;
             }
-            return (mEnvironment.getScreenWidth() - Environment.LANDSCAPE_SKB_WIDTH)/2;
+            return (screenWidth - Environment.LANDSCAPE_SKB_WIDTH) / 2;
         }
     }
 
-    private int getFloatInputY(boolean restarting) {
-        if (!restarting && mServedViewBound != null) {
-            int screenHeight = mEnvironment.getScreenHeight();
+    private int getFloatInputY(boolean sameField) {
+        int screenHeight = Environment.getInstance().getScreenHeight();
+        if (!sameField && mServedViewBound != null) {
             int remainSpace = screenHeight - mServedViewBound.bottom;
             if ((remainSpace < Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
                     && (mServedViewBound.top > Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
@@ -1359,7 +1323,7 @@ public class PinyinIME extends InputMethodService {
             } else {
                 //显示在输入框下方
                 int yPosition = mServedViewBound.bottom + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
-                int yPositionLimit = (mEnvironment.getScreenHeight() - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT)/2;
+                int yPositionLimit = (screenHeight - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT)/2;
                 yPosition = Math.max(yPosition, yPositionLimit);
                 return yPosition;
             }
@@ -1367,7 +1331,7 @@ public class PinyinIME extends InputMethodService {
             if (mLastFloatInputOffsetY != -1) {
                 return mLastFloatInputOffsetY;
             }
-            return (mEnvironment.getScreenHeight() - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT)/2;
+            return (screenHeight - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT)/2;
         }
     }
 
@@ -1379,13 +1343,12 @@ public class PinyinIME extends InputMethodService {
         resetToIdleState(false);
         super.onFinishInputView(finishingInput);
 
-//        if (mEnvironment.needFloatInputMode()) {
-//            int[] locOnScreen = new int[2];
-//            mLandscapeFloatInputContainer.getLocationOnScreen(locOnScreen);
-//            mLastFloatInputOffsetX = locOnScreen[0];
-//            mLastFloatInputOffsetY = locOnScreen[1];
-//            mWindowManager.removeViewImmediate(mLandscapeFloatInputContainer);
-//        }
+        if (mEnvironment.needFloatInputMode()) {
+            int[] locOnScreen = new int[2];
+            mImeWindow.getLocationOnScreen(locOnScreen);
+            mLastFloatInputOffsetX = locOnScreen[0];
+            mLastFloatInputOffsetY = locOnScreen[1];
+        }
 
     }
 
