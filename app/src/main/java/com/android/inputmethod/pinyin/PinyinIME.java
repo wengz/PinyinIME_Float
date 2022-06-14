@@ -1280,9 +1280,10 @@ public class PinyinIME extends InputMethodService {
         //系统的回调参数 restarting 在同一个输入框上隐藏再显示键盘，回调值为false。
         if (!restarting) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImeWindow.getLayoutParams();
-            layoutParams.leftMargin = getFloatInputX(sameField);
-            layoutParams.topMargin = getFloatInputY(sameField);
-
+            int newLeftMargin = getFloatInputX(sameField);
+            int newTopMargin = getFloatInputY(sameField);
+            layoutParams.leftMargin = newLeftMargin;
+            layoutParams.topMargin = newTopMargin;
             Log.d(TAG, "setFloatInputLayoutParam: layoutParams.leftMargin="+layoutParams.leftMargin+" layoutParams.topMargin="+layoutParams.topMargin);
             mImeWindow.setLayoutParams(layoutParams);
             mImeWindow.requestLayout();
@@ -1315,11 +1316,12 @@ public class PinyinIME extends InputMethodService {
         int screenHeight = Environment.getInstance().getScreenHeight();
         if (!sameField && mServedViewBound != null) {
             int remainSpace = screenHeight - mServedViewBound.bottom;
-            if ((remainSpace < Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
-                    && (mServedViewBound.top > Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)
-            ) {
+            if ((remainSpace < Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)) {
                 //显示在输入框上方
-                return mServedViewBound.top - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT - Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+
+                int marginTop = mServedViewBound.top - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT - Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+                int limit = (screenHeight - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT)/2;
+                return Math.max(limit, marginTop);
             } else {
                 //显示在输入框下方
                 int yPosition = mServedViewBound.bottom + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
