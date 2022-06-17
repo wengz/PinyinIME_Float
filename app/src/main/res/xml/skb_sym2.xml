@@ -43,7 +43,7 @@
   </row>
 
   <row start_pos_x="3.441%p" start_pos_y="50%p">
-    <key code="-5" width="12.55%p" key_type="1" label="ALT"/>
+    <key code="-5" width="12.55%p" key_type="2" label="ALT"/>
     <key label="™"/>
     <key label="‘">
       <toggle_state state_id="@string/toggle_en_sym2" label="‘"/>
