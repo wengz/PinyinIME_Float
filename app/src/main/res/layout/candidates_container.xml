@@ -38,6 +38,7 @@
                 android:clickable="true"
                 android:src="@drawable/arrow_left_selector"
                 android:background="@null"
+                android:visibility="invisible"
                 />
 
             <ImageButton
@@ -48,6 +49,7 @@
                 android:clickable="true"
                 android:src="@drawable/arrow_right_selector"
                 android:background="@null"
+                android:visibility="invisible"
                 />
 
             <ViewFlipper
