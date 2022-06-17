@@ -869,6 +869,13 @@ public class PinyinIME extends InputMethodService {
                     if (null != ic) {
                         CharSequence cs = ic.getTextBeforeCursor(3, 0);
                         if (null != cs) {
+                            if (cs.charAt(cs.length() - 1) != resultStr.charAt(resultStr.length() - 1)) {
+                                if (resultStr.length() > 3) {
+                                    cs = resultStr.substring(resultStr.length() - 3);
+                                } else {
+                                    cs = resultStr;
+                                }
+                            }
                             mDecInfo.preparePredicts(cs);
                         }
                     }
