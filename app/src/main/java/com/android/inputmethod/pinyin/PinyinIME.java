@@ -26,12 +26,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
-import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.inputmethodservice.InputMethodService;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -952,12 +950,13 @@ public class PinyinIME extends InputMethodService {
                 R.layout.candidates_container, null);
 
         // Create balloon hint for candidates view.
-        mCandidatesBalloon = new BalloonHint(this, mCandidatesContainer,
+        mCandidatesBalloon = new BalloonHint(this, null,
                 MeasureSpec.UNSPECIFIED, 20);
         mCandidatesBalloon.setBalloonBackground(getResources().getDrawable(
                 R.drawable.candidate_balloon_hint_bg));
         mCandidatesContainer.initialize(mChoiceNotifier, mCandidatesBalloon,
                 mGestureDetectorCandidates);
+        mCandidatesBalloon.setParent(mCandidatesContainer.getFlipper());
 
         // The floating window
         if (null != mFloatingWindow && mFloatingWindow.isShowing()) {
@@ -1022,7 +1021,7 @@ public class PinyinIME extends InputMethodService {
         mBtnHide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideWindow();
+                requestHideSelf(0);
             }
         });
     }
@@ -1227,6 +1226,8 @@ public class PinyinIME extends InputMethodService {
         layoutParams.topMargin = Math.min(Math.max(0, newTopMargin), yLimitMax);
         mImeWindow.setLayoutParams(layoutParams);
         mImeWindow.requestLayout();
+        //触发 ComposingView 显示位置更新
+        mFloatingWindowTimer.postShowFloatingWindow();
     }
 
     @Override
@@ -1270,12 +1271,14 @@ public class PinyinIME extends InputMethodService {
 
     private void setFloatInputLayoutParam(EditorInfo editorInfo, boolean restarting) {
         boolean sameField = false;
-        int editorObjectId = editorInfo.extras.getInt(BUNDLE_KEY_SERVED_VIEW_OBJECT_ID, NO_OBJECT_ID);
-        if (editorInfo.fieldId == mLastFieldId && editorObjectId == mLastEditorObjectId ) {
-            sameField = true;
+        if (editorInfo.extras != null) {
+            int editorObjectId = editorInfo.extras.getInt(BUNDLE_KEY_SERVED_VIEW_OBJECT_ID, NO_OBJECT_ID);
+            if (editorInfo.fieldId == mLastFieldId && editorObjectId == mLastEditorObjectId ) {
+                sameField = true;
+            }
+            mLastFieldId = editorInfo.fieldId;
+            mLastEditorObjectId = editorObjectId;
         }
-        mLastFieldId = editorInfo.fieldId;
-        mLastEditorObjectId = editorObjectId;
 
         //系统的回调参数 restarting 在同一个输入框上隐藏再显示键盘，回调值为false。
         if (!restarting) {

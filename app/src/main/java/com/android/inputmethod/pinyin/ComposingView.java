@@ -227,8 +227,10 @@ public class ComposingView extends View {
 //                - getPaddingRight(), getHeight() - getPaddingBottom());
 //        mHlDrawable.draw(canvas);
 
-        String splStr = mDecInfo.getOrigianlSplStr().toString();
-        canvas.drawText(splStr, 0, splStr.length(), x, y, mPaint);
+        if (mDecInfo != null) {
+            String splStr = mDecInfo.getOrigianlSplStr().toString();
+            canvas.drawText(splStr, 0, splStr.length(), x, y, mPaint);
+        }
     }
 
     private void drawCursor(Canvas canvas, float x) {

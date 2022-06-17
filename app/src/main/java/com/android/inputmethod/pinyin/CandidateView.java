@@ -705,8 +705,7 @@ public class CandidateView extends View {
             getLocationOnScreen(mLocationTmp);
         }
 
-        mHintPositionToInputView[0] = mLocationTmp[0]
-                + (int) (r.left - (mBalloonHint.getWidth() - desired_width) / 2);
+        mHintPositionToInputView[0] = (int) (r.left - (mBalloonHint.getWidth() - desired_width) / 2);
         mHintPositionToInputView[1] = -mBalloonHint.getHeight();
 
         long delay = BalloonHint.TIME_DELAY_SHOW;

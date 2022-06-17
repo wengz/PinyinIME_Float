@@ -102,6 +102,10 @@ public class BalloonHint extends PopupWindow {
         mBalloonTimer = new BalloonTimer();
     }
 
+    public void setParent(View parent) {
+        this.mParent = parent;
+    }
+
     public Context getContext() {
         return mContext;
     }
@@ -187,8 +191,8 @@ public class BalloonHint extends PopupWindow {
         if (delay <= 0) {
             mParent.getLocationInWindow(mParentLocationInWindow);
             showAtLocation(mParent, Gravity.LEFT | Gravity.TOP,
-                    locationInParent[0], locationInParent[1]
-                            + mParentLocationInWindow[1]);
+                    locationInParent[0] + mParentLocationInWindow[0],
+                    locationInParent[1] + mParentLocationInWindow[1]);
         } else {
             mBalloonTimer.startTimer(delay, BalloonTimer.ACTION_SHOW,
                     locationInParent, -1, -1);
@@ -203,7 +207,7 @@ public class BalloonHint extends PopupWindow {
         }
         if (delay <= 0) {
             mParent.getLocationInWindow(mParentLocationInWindow);
-            update(locationInParent[0], locationInParent[1]
+            update(locationInParent[0] + mParentLocationInWindow[0], locationInParent[1]
                     + mParentLocationInWindow[1], width, height);
         } else {
             mBalloonTimer.startTimer(delay, BalloonTimer.ACTION_UPDATE,
@@ -318,16 +322,17 @@ public class BalloonHint extends PopupWindow {
                 case ACTION_SHOW:
                     mParent.getLocationInWindow(mParentLocationInWindow);
                     showAtLocation(mParent, Gravity.LEFT | Gravity.TOP,
-                            mPositionInParent[0], mPositionInParent[1]
-                                    + mParentLocationInWindow[1]);
+                            mPositionInParent[0] + mParentLocationInWindow[0],
+                            mPositionInParent[1] + mParentLocationInWindow[1]);
                     break;
                 case ACTION_HIDE:
                     dismiss();
                     break;
                 case ACTION_UPDATE:
                     mParent.getLocationInWindow(mParentLocationInWindow);
-                    update(mPositionInParent[0], mPositionInParent[1]
-                            + mParentLocationInWindow[1], mWidth, mHeight);
+                    update(
+                            mPositionInParent[0] + mParentLocationInWindow[1],
+                            mPositionInParent[1] + mParentLocationInWindow[1], mWidth, mHeight);
             }
             mTimerPending = false;
         }

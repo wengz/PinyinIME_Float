@@ -189,6 +189,10 @@ public class CandidatesContainer extends RelativeLayout implements
         }
     }
 
+    public ViewFlipper getFlipper() {
+        return mFlipper;
+    }
+
     public void showCandidates(PinyinIME.DecodingInfo decInfo,
             boolean enableActiveHighlight) {
         if (null == decInfo) return;
