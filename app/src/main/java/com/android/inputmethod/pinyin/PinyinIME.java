@@ -1309,7 +1309,7 @@ public class PinyinIME extends InputMethodService {
         int screenWidth = Environment.getInstance().getScreenWidth();
         if (!sameField && mServedViewBound != null) {
             int xPosition = mServedViewBound.left + INIT_DISPLAY_LEFT_OFFSET_TO_INPUT;
-            int gap = 3;
+            int gap = 5;
             int xPositionMinLimit = SIDE_BAR_ICON_WIDTH + gap;
             int xPositionMaxLimit = screenWidth - SIDE_BAR_ICON_WIDTH - Environment.LANDSCAPE_SKB_WIDTH - gap;
             xPosition = Math.min(Math.max(xPosition, xPositionMinLimit), xPositionMaxLimit);
