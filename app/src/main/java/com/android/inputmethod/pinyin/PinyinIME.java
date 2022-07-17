@@ -1280,9 +1280,14 @@ public class PinyinIME extends InputMethodService {
         boolean sameField = false;
         if (editorInfo.extras != null) {
             int editorObjectId = editorInfo.extras.getInt(BUNDLE_KEY_SERVED_VIEW_OBJECT_ID, NO_OBJECT_ID);
-            if (editorInfo.fieldId == mLastFieldId && editorObjectId == mLastEditorObjectId ) {
+            if (editorObjectId == mLastEditorObjectId ) {
                 sameField = true;
             }
+
+//            if (editorInfo.fieldId != View.NO_ID && editorInfo.fieldId == mLastFieldId) {
+//                sameField = true;
+//            }
+
             mLastFieldId = editorInfo.fieldId;
             mLastEditorObjectId = editorObjectId;
         }
@@ -1325,25 +1330,28 @@ public class PinyinIME extends InputMethodService {
     private int getFloatInputY(boolean sameField) {
         int screenHeight = Environment.getInstance().getScreenHeight();
         if (!sameField && mServedViewBound != null) {
-            int remainSpace = screenHeight - mServedViewBound.bottom;
-            if ((remainSpace < Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN)) {
-                //显示在输入框上方
-
-                int marginTop = mServedViewBound.top - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT - Environment.LANDSCAPE_SKB_VIEW_MARGIN;
-                int limit = (screenHeight - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT)/2;
-                return Math.max(limit, marginTop);
-            } else {
+            int remainBottomSpace = screenHeight - mServedViewBound.bottom;
+            int remainTopSpace = mServedViewBound.top;
+            int needVerticalSpace = Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+            if ((remainBottomSpace >= needVerticalSpace)) {
                 //显示在输入框下方
                 int yPosition = mServedViewBound.bottom + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
-                int yPositionLimit = (screenHeight - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT)/2;
+                int yPositionLimit = (screenHeight - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT) / 2;
                 yPosition = Math.max(yPosition, yPositionLimit);
                 return yPosition;
+
+            } else if (remainTopSpace >= needVerticalSpace) {
+                //显示在输入框上方
+                return mServedViewBound.top - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT - Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+            } else {
+                //输入框占据纵向空间很大，在其内部纵向居中。
+                return mServedViewBound.top + ((mServedViewBound.bottom - mServedViewBound.top) / 4);
             }
         } else {
             if (mLastFloatInputOffsetY != -1) {
                 return mLastFloatInputOffsetY;
             }
-            return (screenHeight - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT)/2;
+            return (screenHeight - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT) / 2;
         }
     }
 

@@ -265,9 +265,6 @@ public class CandidateView extends View {
                 widthMeasureSpec), getDefaultSize(getSuggestedMinimumHeight(),
                 heightMeasureSpec));
 
-        Log.d("zzz", "onMeasure: mOldWidth="+mOldWidth+" mOldHeight="+mOldHeight);
-        Log.d("zzz", "onMeasure: getMeasuredWidth()="+getMeasuredWidth()+" getMeasuredHeight="+getMeasuredHeight());
-
         if ((mOldWidth != getMeasuredWidth() || mOldHeight != getMeasuredHeight())) {
             onSizeChanged();
         }

@@ -295,6 +295,7 @@ public class SkbContainer extends RelativeLayout implements OnTouchListener {
         if (null == skb) return;
         skb.enableToggleStates(mInputModeSwitcher.getToggleStates());
         invalidate();
+        mMajorView.invalidate();
         return;
     }
 
