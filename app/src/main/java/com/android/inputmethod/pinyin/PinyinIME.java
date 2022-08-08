@@ -1310,9 +1310,17 @@ public class PinyinIME extends InputMethodService {
     private int mLastFloatInputOffsetX = -1;
     private int mLastFloatInputOffsetY = -1;
 
+    private int mLastOrientationWhenGetX;
+    private int mLastOrientationWhenGetY;
+
     private int getFloatInputX(boolean sameField) {
+        int orientation = Environment.getInstance().getScreenOrientation();
+        boolean orientationChanged = (orientation != mLastOrientationWhenGetX);
+        mLastOrientationWhenGetX = orientation;
         int screenWidth = Environment.getInstance().getScreenWidth();
-        if (!sameField && mServedViewBound != null) {
+        Log.d(TAG, "getFloatInputX: screenWidth="+screenWidth);
+        if (mServedViewBound != null
+                && (!sameField || orientationChanged)) {
             int xPosition = mServedViewBound.left + INIT_DISPLAY_LEFT_OFFSET_TO_INPUT;
             int gap = 5;
             int xPositionMinLimit = SIDE_BAR_ICON_WIDTH + gap;
@@ -1327,9 +1335,25 @@ public class PinyinIME extends InputMethodService {
         }
     }
 
-    private int getFloatInputY(boolean sameField) {
+
+    /**
+     * 横竖屏旋转时 mServedViewBound 没有更新，先强制限制在屏幕内。
+     * TODO 横竖屏旋转时更新 mServedViewBound。
+     */
+    private int limitInScreenY(int rawY) {
         int screenHeight = Environment.getInstance().getScreenHeight();
-        if (!sameField && mServedViewBound != null) {
+        int xPositionMaxLimit = screenHeight - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT;
+        return Math.max(Math.min(rawY, xPositionMaxLimit), 0);
+    }
+
+    private int getFloatInputY(boolean sameField) {
+        int orientation = Environment.getInstance().getScreenOrientation();
+        boolean orientationChanged = (orientation != mLastOrientationWhenGetY);
+        mLastOrientationWhenGetY = orientation;
+        int screenHeight = Environment.getInstance().getScreenHeight();
+        Log.d(TAG, "getFloatInputY: screenHeight="+screenHeight);
+        if (mServedViewBound != null
+            && (!sameField || orientationChanged)) {
             int remainBottomSpace = screenHeight - mServedViewBound.bottom;
             int remainTopSpace = mServedViewBound.top;
             int needVerticalSpace = Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
@@ -1338,14 +1362,16 @@ public class PinyinIME extends InputMethodService {
                 int yPosition = mServedViewBound.bottom + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
                 int yPositionLimit = (screenHeight - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT) / 2;
                 yPosition = Math.max(yPosition, yPositionLimit);
-                return yPosition;
+                return limitInScreenY(yPosition);
 
             } else if (remainTopSpace >= needVerticalSpace) {
                 //显示在输入框上方
-                return mServedViewBound.top - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT - Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+                int yPosition =  mServedViewBound.top - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT - Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+                return limitInScreenY(yPosition);
             } else {
                 //输入框占据纵向空间很大，在其内部纵向居中。
-                return mServedViewBound.top + ((mServedViewBound.bottom - mServedViewBound.top) / 4);
+                int yPosition = mServedViewBound.top + ((mServedViewBound.bottom - mServedViewBound.top) / 4);
+                return limitInScreenY(yPosition);
             }
         } else {
             if (mLastFloatInputOffsetY != -1) {
