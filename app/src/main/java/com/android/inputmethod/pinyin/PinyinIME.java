@@ -52,6 +52,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -1280,10 +1281,12 @@ public class PinyinIME extends InputMethodService {
         boolean sameField = false;
         if (editorInfo.extras != null) {
             int editorObjectId = editorInfo.extras.getInt(BUNDLE_KEY_SERVED_VIEW_OBJECT_ID, NO_OBJECT_ID);
+            Log.d(TAG, "setFloatInputLayoutParam: editorObjectId="+editorObjectId+" mLastEditorObjectId="+mLastEditorObjectId);
             if (editorObjectId == mLastEditorObjectId ) {
                 sameField = true;
             }
-
+//不使用fieldId进行评定（View#getId）。加载相同布局文件渲染同一页面的不同部分是很常见的，造成同一页面不同控件的View Id相同。
+//            Log.d(TAG, "setFloatInputLayoutParam: editorInfo.fieldId="+editorInfo.fieldId+" mLastFieldId="+mLastFieldId);
 //            if (editorInfo.fieldId != View.NO_ID && editorInfo.fieldId == mLastFieldId) {
 //                sameField = true;
 //            }
@@ -1318,10 +1321,11 @@ public class PinyinIME extends InputMethodService {
         boolean orientationChanged = (orientation != mLastOrientationWhenGetX);
         mLastOrientationWhenGetX = orientation;
         int screenWidth = Environment.getInstance().getScreenWidth();
-        Log.d(TAG, "getFloatInputX: screenWidth="+screenWidth);
+        Log.d(TAG, "getFloatInputX: screenWidth="+screenWidth+" mServedViewBound="+mServedViewBound+" sameField="+sameField);
         if (mServedViewBound != null
                 && (!sameField || orientationChanged)) {
-            int xPosition = mServedViewBound.left + INIT_DISPLAY_LEFT_OFFSET_TO_INPUT;
+            Rect servedViewBound = viewBoundAdjustToScreenMode();
+            int xPosition = servedViewBound.left + INIT_DISPLAY_LEFT_OFFSET_TO_INPUT;
             int gap = 5;
             int xPositionMinLimit = SIDE_BAR_ICON_WIDTH + gap;
             int xPositionMaxLimit = screenWidth - SIDE_BAR_ICON_WIDTH - Environment.LANDSCAPE_SKB_WIDTH - gap;
@@ -1333,6 +1337,22 @@ public class PinyinIME extends InputMethodService {
             }
             return (screenWidth - Environment.LANDSCAPE_SKB_WIDTH) / 2;
         }
+    }
+    
+    private Rect viewBoundAdjustToScreenMode() {
+        int screenMode = loadScreenMode();
+        Rect servedViewBound = null;
+        if (screenMode == 1) {
+            int topOffset = (int) (mEnvironment.getScreenHeight()*0.25);
+            servedViewBound = new Rect(mServedViewBound.left, mServedViewBound.top-topOffset, mServedViewBound.right, mServedViewBound.bottom-topOffset);
+        } else if (screenMode == 2) {
+            int leftOffSet = (int) (mEnvironment.getScreenWidth() * 0.25);
+            int topOffset = (int) (mEnvironment.getScreenHeight()*0.25);
+            servedViewBound = new Rect(mServedViewBound.left-leftOffSet, mServedViewBound.top-topOffset, mServedViewBound.right-leftOffSet, mServedViewBound.bottom-topOffset);
+        } else {
+            servedViewBound = mServedViewBound;
+        }
+        return servedViewBound;
     }
 
 
@@ -1354,24 +1374,27 @@ public class PinyinIME extends InputMethodService {
         Log.d(TAG, "getFloatInputY: screenHeight="+screenHeight);
         if (mServedViewBound != null
             && (!sameField || orientationChanged)) {
-            int remainBottomSpace = screenHeight - mServedViewBound.bottom;
-            int remainTopSpace = mServedViewBound.top;
+            Rect servedViewBound = viewBoundAdjustToScreenMode();
+            
+            int remainBottomSpace = screenHeight - servedViewBound.bottom;
+            int remainTopSpace = servedViewBound.top;
             int needVerticalSpace = Environment.LANDSCAPE_SKB_PREDICT_HEIGHT + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
             if ((remainBottomSpace >= needVerticalSpace)) {
                 //显示在输入框下方
-                int yPosition = mServedViewBound.bottom + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+                int yPosition = servedViewBound.bottom + Environment.LANDSCAPE_SKB_VIEW_MARGIN;
                 int yPositionLimit = (screenHeight - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT) / 2;
                 yPosition = Math.max(yPosition, yPositionLimit);
                 return limitInScreenY(yPosition);
 
             } else if (remainTopSpace >= needVerticalSpace) {
                 //显示在输入框上方
-                int yPosition =  mServedViewBound.top - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT - Environment.LANDSCAPE_SKB_VIEW_MARGIN;
+                int yPosition =  servedViewBound.top - Environment.LANDSCAPE_SKB_PREDICT_HEIGHT - Environment.LANDSCAPE_SKB_VIEW_MARGIN;
                 return limitInScreenY(yPosition);
             } else {
                 //输入框占据纵向空间很大，在其内部纵向居中。
-                int yPosition = mServedViewBound.top + ((mServedViewBound.bottom - mServedViewBound.top) / 4);
+                int yPosition = servedViewBound.top + ((servedViewBound.bottom - servedViewBound.top) / 4);
                 return limitInScreenY(yPosition);
+
             }
         } else {
             if (mLastFloatInputOffsetY != -1) {
@@ -2391,5 +2414,28 @@ public class PinyinIME extends InputMethodService {
     @Override
     public boolean onEvaluateFullscreenMode() {
         return false;
+    }
+
+    private int loadScreenMode() {
+        try {
+            String onestepmode = getProperty("sys.tpv.onestepmode", "0");
+            return Integer.parseInt(onestepmode.split(",")[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static String getProperty(String key, String defaultValue) {
+        String value = defaultValue;
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method get = c.getMethod("get", String.class, String.class);
+            value = (String) (get.invoke(c, key, defaultValue));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return value;
+        }
     }
 }
