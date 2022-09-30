@@ -960,6 +960,12 @@ public class PinyinIME extends InputMethodService {
 
         // The first child is the composing view.
         mComposingView = (ComposingView) mFloatingContainer.getChildAt(0);
+        mComposingView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                processKey(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER), true);
+            }
+        });
 
         mCandidatesContainer = (CandidatesContainer) inflater.inflate(
                 R.layout.candidates_container, null);
