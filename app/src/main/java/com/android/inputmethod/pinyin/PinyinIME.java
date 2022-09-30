@@ -618,8 +618,15 @@ public class PinyinIME extends InputMethodService {
         } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
             sendKeyChar('\n');
             resetToIdleState(false);
-        } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
-                || keyCode == KeyEvent.KEYCODE_SPACE) {
+        } else if (keyCode == KeyEvent.KEYCODE_SPACE) {
+            int activeCandNo = mCandidatesContainer.getActiveCandiatePos();
+            if (activeCandNo >= 0) {
+                chooseAndUpdate(activeCandNo);
+            } else {
+                sendKeyChar(' ');
+                resetToIdleState(false);
+            }
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
             chooseCandidate(-1);
         }
 
@@ -1111,7 +1118,7 @@ public class PinyinIME extends InputMethodService {
 
         updateComposingText(showComposingView);
         mCandidatesContainer.showCandidates(mDecInfo,
-                ImeState.STATE_COMPOSING != mImeState);
+                ImeState.STATE_COMPOSING != mImeState, mImeState);
 
         if (showComposingView) {
             mFloatingWindowTimer.postShowFloatingWindow();

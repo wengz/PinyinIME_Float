@@ -193,8 +193,7 @@ public class CandidatesContainer extends RelativeLayout implements
         return mFlipper;
     }
 
-    public void showCandidates(PinyinIME.DecodingInfo decInfo,
-            boolean enableActiveHighlight) {
+    public void showCandidates(PinyinIME.DecodingInfo decInfo, boolean enableActiveHighlight, PinyinIME.ImeState imeState) {
         if (null == decInfo) return;
         mDecInfo = decInfo;
         mCurrentPage = 0;
@@ -214,7 +213,7 @@ public class CandidatesContainer extends RelativeLayout implements
         stopAnimation();
 
         CandidateView cv = (CandidateView) mFlipper.getCurrentView();
-        cv.showPage(mCurrentPage, 0, enableActiveHighlight);
+        cv.showPage(mCurrentPage, imeState == PinyinIME.ImeState.STATE_PREDICT ? -1 : 0, enableActiveHighlight);
 
         updateArrowStatus();
         invalidate();
