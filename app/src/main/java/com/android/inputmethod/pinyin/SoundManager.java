@@ -18,6 +18,7 @@ package com.android.inputmethod.pinyin;
 
 import android.content.Context;
 import android.media.AudioManager;
+import android.util.Log;
 
 /**
  * Class used to manage related sound resources.
@@ -57,8 +58,13 @@ public class SoundManager {
             updateRingerMode();
         }
         if (!mSilentMode) {
-            int sound = AudioManager.FX_KEYPRESS_STANDARD;
-            mAudioManager.playSoundEffect(sound, FX_VOLUME);
+            int sound = AudioManager.FX_KEY_CLICK;
+            int musicVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            int maxMusicVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+            double startR = 0.5;
+            double endR = 0.25;
+            double volume = startR - ((startR - endR) * 1.0 * musicVolume / maxMusicVolume);
+            mAudioManager.playSoundEffect(sound, (float) volume);
         }
     }
 }
