@@ -68,6 +68,7 @@ public class PinyinIME extends InputMethodService {
 
     public static final String BUNDLE_KEY_SERVED_VIEW_BOUND = "com.tpv.xm.iwb.ime.BUNDLE_KEY_SERVED_VIEW_BOUND";
     public static final String BUNDLE_KEY_SERVED_VIEW_OBJECT_ID = "com.tpv.xm.iwb.ime.BUNDLE_KEY_SERVED_VIEW_OBJECT_ID";
+    public static final String BUNDLE_KEY_NOT_FOLLOW = "com.tpv.xm.iwb.ime.BUNDLE_KEY_NOT_FOLLOW";
 
     /**
      * If is is true, IME will simulate key events for delete key, and send the
@@ -1273,6 +1274,7 @@ public class PinyinIME extends InputMethodService {
         if (editorInfo.extras != null) {
             mServedViewBound = editorInfo.extras.getParcelable(BUNDLE_KEY_SERVED_VIEW_BOUND);
             Log.d(TAG, "onStartInputView: mServedViewBound="+mServedViewBound);
+            Log.d(TAG, "onStartInputView: editorInfo.extras="+editorInfo.extras);
         }
 
         updateIcon(mInputModeSwitcher.requestInputWithSkb(editorInfo));
@@ -1292,7 +1294,10 @@ public class PinyinIME extends InputMethodService {
 
     private void setFloatInputLayoutParam(EditorInfo editorInfo, boolean restarting) {
         boolean sameField = false;
+        boolean notFollow = false;
         if (editorInfo.extras != null) {
+            notFollow = editorInfo.extras.getBoolean(BUNDLE_KEY_NOT_FOLLOW, false);
+
             int editorObjectId = editorInfo.extras.getInt(BUNDLE_KEY_SERVED_VIEW_OBJECT_ID, NO_OBJECT_ID);
             Log.d(TAG, "setFloatInputLayoutParam: editorObjectId="+editorObjectId+" mLastEditorObjectId="+mLastEditorObjectId);
             if (editorObjectId == mLastEditorObjectId ) {
@@ -1311,8 +1316,8 @@ public class PinyinIME extends InputMethodService {
         //系统的回调参数 restarting 在同一个输入框上隐藏再显示键盘，回调值为false。
         if (!restarting) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImeWindow.getLayoutParams();
-            int newLeftMargin = getFloatInputX(sameField);
-            int newTopMargin = getFloatInputY(sameField);
+            int newLeftMargin = getFloatInputX(sameField, notFollow);
+            int newTopMargin = getFloatInputY(sameField, notFollow);
             layoutParams.leftMargin = newLeftMargin;
             layoutParams.topMargin = newTopMargin;
             Log.d(TAG, "setFloatInputLayoutParam: layoutParams.leftMargin="+layoutParams.leftMargin+" layoutParams.topMargin="+layoutParams.topMargin);
@@ -1329,13 +1334,13 @@ public class PinyinIME extends InputMethodService {
     private int mLastOrientationWhenGetX;
     private int mLastOrientationWhenGetY;
 
-    private int getFloatInputX(boolean sameField) {
+    private int getFloatInputX(boolean sameField, boolean notFollow) {
         int orientation = Environment.getInstance().getScreenOrientation();
         boolean orientationChanged = (orientation != mLastOrientationWhenGetX);
         mLastOrientationWhenGetX = orientation;
         int screenWidth = Environment.getInstance().getScreenWidth();
         Log.d(TAG, "getFloatInputX: screenWidth="+screenWidth+" mServedViewBound="+mServedViewBound+" sameField="+sameField);
-        if (mServedViewBound != null
+        if (!notFollow && mServedViewBound != null
                 && (!sameField || orientationChanged)) {
             Rect servedViewBound = viewBoundAdjustToScreenMode();
             int xPosition = servedViewBound.left + INIT_DISPLAY_LEFT_OFFSET_TO_INPUT;
@@ -1379,13 +1384,13 @@ public class PinyinIME extends InputMethodService {
         return Math.max(Math.min(rawY, xPositionMaxLimit), 0);
     }
 
-    private int getFloatInputY(boolean sameField) {
+    private int getFloatInputY(boolean sameField, boolean notFollow) {
         int orientation = Environment.getInstance().getScreenOrientation();
         boolean orientationChanged = (orientation != mLastOrientationWhenGetY);
         mLastOrientationWhenGetY = orientation;
         int screenHeight = Environment.getInstance().getScreenHeight();
         Log.d(TAG, "getFloatInputY: screenHeight="+screenHeight);
-        if (mServedViewBound != null
+        if (!notFollow && mServedViewBound != null
             && (!sameField || orientationChanged)) {
             Rect servedViewBound = viewBoundAdjustToScreenMode();
             
